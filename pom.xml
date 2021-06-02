@@ -15,9 +15,19 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.google.api-client</groupId>
+            <artifactId>google-api-client</artifactId>
+            <version>1.30.4</version>
+        </dependency>
+        <dependency>
             <groupId>com.google.apis</groupId>
             <artifactId>google-api-services-sheets</artifactId>
             <version>v4-rev612-1.25.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.auth</groupId>
+            <artifactId>google-auth-library-appengine</artifactId>
+            <version>0.26.0</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
