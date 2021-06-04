@@ -3,7 +3,7 @@ package com.goit.telegrambot;
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        UserNotificationTimer.run(20, 33);
     }
 
 }
