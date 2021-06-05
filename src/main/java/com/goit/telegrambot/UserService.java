@@ -11,13 +11,14 @@ public class UserService {
 
     public static User newUser(long chatId){
         String email;
+        TelegramApiController registerBot = new TelegramApiController();
         do{
-            new TelegramApiController().sendText(chatId, "Введи адрес электронной почты: ");
+            registerBot.sendText(chatId, "Введи адрес электронной почты: ");
 
-            email = new TelegramApiController().getLastMessage();
+            email = registerBot.getLastMessage();
         }while (!emailCheck(email));
 
-        return null;
+        return new User(chatId, email, "235");
     }
 
 }
