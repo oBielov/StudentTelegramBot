@@ -19,8 +19,8 @@ import java.util.Properties;
 public class TelegramApiController extends TelegramLongPollingBot {
     private static Properties appProperties;
     private static final String PROPERTIES_FILEPATH = "/application.properties";
-    private Long lastChatId;
-    private String lastMessage;
+//    private Long lastChatId;
+//    private String lastMessage;
 
     @SneakyThrows
     @Override
@@ -44,23 +44,19 @@ public class TelegramApiController extends TelegramLongPollingBot {
     private  void handleMessageUpdate(Update update) {
         Long chatId = update.getMessage().getChatId();
         String messageText = update.getMessage().getText();
-        lastChatId = chatId;
-        lastMessage = messageText;
-//         //тут вызов метода класса, который обрабатывает апдейты от телеграмбота
-//        TestService testService = new TestService(chatId, messageText);
-//        testService.analiseMessage();
+         //тут вызов метода класса, который обрабатывает апдейты от телеграмбота
+        new TestService(chatId, messageText).analiseMessage();
     }
 
-    public Long getLastChatId() { return lastChatId; }
-
-    public String getLastMessage() { return lastMessage; }
+//    public Long getLastChatId() { return lastChatId; }
+//
+//    public String getLastMessage() { return lastMessage; }
 
     // написать юзеру текст
     public void sendText(Long chatId, String text){
         SendMessage sendMessageRequest = new SendMessage();
-        sendMessageRequest.setChatId(chatId.toString()); //who should get the message? the sender from which we got the message...
+        sendMessageRequest.setChatId(chatId.toString());
         sendMessageRequest.setText(text);
-        //sendMessageRequest.setReplyMarkup(createKeyboard());
         try {
             sendApiMethod(sendMessageRequest);
         } catch (TelegramApiException e) {
@@ -69,7 +65,7 @@ public class TelegramApiController extends TelegramLongPollingBot {
     }
 
     // вывести юзеру кнопки
-    public void sendButton(Long chatId, String[] buttons){
+    public void sendButton(Long chatId, String text, String[] buttons){
         SendMessage sendMessageRequest = new SendMessage();
         sendMessageRequest.setChatId(chatId.toString());
         sendMessageRequest.setText("Are you ready?");
