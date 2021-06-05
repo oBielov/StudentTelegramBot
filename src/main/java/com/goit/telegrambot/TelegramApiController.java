@@ -30,8 +30,11 @@ public class TelegramApiController extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        if (update.hasMessage() && update.getMessage().hasText() ){
+        if (update.hasMessage() && update.getMessage().hasText()){
             handleMessageUpdate(update);
+        }
+        if (update.hasCallbackQuery()){
+             handleCallbackQueryUpdate(update);
         }
     }
 
@@ -39,24 +42,19 @@ public class TelegramApiController extends TelegramLongPollingBot {
     private  void handleMessageUpdate(Update update) {
         Long chatId = update.getMessage().getChatId();
         String messageText = update.getMessage().getText();
-        //sendText(chatId, "Ви написали: " + messageText);
-        if ("/start".equals(messageText)){
-            // это старт!
-            sendText(chatId, "Введите электронную почту: ");
-            // нужен статус, что ждем почту и ничего не давать делать (кроме "/start"), пока почта не введена
-        }
-        else {
-            sendText(chatId, "Ви написали: " + messageText);
-            //sendButton(chatId);
-        }
+
+        // тут вызов метода класса, который обрабатывает апдейты от телеграмбота
+        TestService testService = new TestService(chatId, messageText);
+        testService.analiseMessage();
+
     }
 
     // написать юзеру текст
-    private void sendText(Long chatId, String text){
+    public void sendText(Long chatId, String text){
         SendMessage sendMessageRequest = new SendMessage();
         sendMessageRequest.setChatId(chatId.toString()); //who should get the message? the sender from which we got the message...
         sendMessageRequest.setText(text);
-        sendMessageRequest.setReplyMarkup(createKeyboard());
+        //sendMessageRequest.setReplyMarkup(createKeyboard());
         try {
             sendApiMethod(sendMessageRequest);
         } catch (TelegramApiException e) {
@@ -65,10 +63,11 @@ public class TelegramApiController extends TelegramLongPollingBot {
     }
 
     // вывести юзеру кнопки
-    private void sendButton(Long chatId){
+    public void sendButton(Long chatId, String[] buttons){
         SendMessage sendMessageRequest = new SendMessage();
         sendMessageRequest.setChatId(chatId.toString());
-        sendMessageRequest.setReplyMarkup(createKeyboard());
+        sendMessageRequest.setText("Are you ready?");
+        sendMessageRequest.setReplyMarkup(createKeyboard(buttons));
         try {
             sendApiMethod(sendMessageRequest);
         } catch (TelegramApiException e) {
@@ -77,17 +76,30 @@ public class TelegramApiController extends TelegramLongPollingBot {
     }
 
     // создать кнопки
-    private ReplyKeyboard createKeyboard(){
+    private ReplyKeyboard createKeyboard(String[] buttons){
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
+        // добавить формирование листа с кнопками
         keyboard.setKeyboard(
                 Collections.singletonList(
                         Arrays.asList(
-                                InlineKeyboardButton.builder().text("YES").callbackData("yes").build(),
-                                InlineKeyboardButton.builder().text("NO").callbackData("no").build()
+                                InlineKeyboardButton.builder().text("YES").callbackData("answer_yes").build(),
+                                InlineKeyboardButton.builder().text("NO").callbackData("answer_no").build()
                         )
                 )
         );
         return keyboard;
+    }
+
+    //
+    private void handleCallbackQueryUpdate(Update update){
+        String callbackQuery = update.getCallbackQuery().getData();
+        Long chatId = update.getCallbackQuery().getFrom().getId();
+        if ("answer_yes".equals(callbackQuery)){
+            sendText(chatId,"It's all right ;) ");
+        }
+        else if ("answer_no".equals(callbackQuery)){
+            sendText(chatId,"Go to learn!");
+        }
     }
 
     /**
