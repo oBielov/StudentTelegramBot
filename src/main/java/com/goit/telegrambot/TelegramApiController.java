@@ -19,6 +19,8 @@ import java.util.Properties;
 public class TelegramApiController extends TelegramLongPollingBot {
     private static Properties appProperties;
     private static final String PROPERTIES_FILEPATH = "/application.properties";
+    private Long lastChatId;
+    private String lastMessage;
 
     @SneakyThrows
     @Override
@@ -42,12 +44,16 @@ public class TelegramApiController extends TelegramLongPollingBot {
     private  void handleMessageUpdate(Update update) {
         Long chatId = update.getMessage().getChatId();
         String messageText = update.getMessage().getText();
-
-        // тут вызов метода класса, который обрабатывает апдейты от телеграмбота
-        TestService testService = new TestService(chatId, messageText);
-        testService.analiseMessage();
-
+        lastChatId = chatId;
+        lastMessage = messageText;
+//         //тут вызов метода класса, который обрабатывает апдейты от телеграмбота
+//        TestService testService = new TestService(chatId, messageText);
+//        testService.analiseMessage();
     }
+
+    public Long getLastChatId() { return lastChatId; }
+
+    public String getLastMessage() { return lastMessage; }
 
     // написать юзеру текст
     public void sendText(Long chatId, String text){
