@@ -1,6 +1,7 @@
 package com.goit.telegrambot;
 
 import org.apache.commons.validator.routines.EmailValidator;
+import org.telegram.telegrambots.meta.api.objects.Update;
 
 public class UserService {
 
@@ -12,6 +13,7 @@ public class UserService {
         String email;
         do{
             new TelegramApiController().sendText(chatId, "Введи адрес электронной почты: ");
+
             email = new TelegramApiController().getLastMessage();
         }while (!emailCheck(email));
 

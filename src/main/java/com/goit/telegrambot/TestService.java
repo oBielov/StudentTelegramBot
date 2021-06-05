@@ -14,6 +14,7 @@ public class TestService {
     public void analiseMessage() {
         if ("/start".equals(message)){
             // если chatId найден, то можно без регистрации
+            UserService.newUser(chatId);
             if (true){
                 new TelegramApiController().sendText(chatId,"Welcome aboard");
                 new TelegramApiController().sendText(chatId,"Приветствуем тебя студент, этот бот поможет тебе подготовится к техническим собеседованиям по вебразработке, но прежде тебе нужно выбрать блок изучения");

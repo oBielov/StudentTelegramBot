@@ -47,8 +47,8 @@ public class TelegramApiController extends TelegramLongPollingBot {
         lastChatId = chatId;
         lastMessage = messageText;
 //         //тут вызов метода класса, который обрабатывает апдейты от телеграмбота
-//        TestService testService = new TestService(chatId, messageText);
-//        testService.analiseMessage();
+        TestService testService = new TestService(chatId, messageText);
+        testService.analiseMessage();
     }
 
     public Long getLastChatId() { return lastChatId; }
