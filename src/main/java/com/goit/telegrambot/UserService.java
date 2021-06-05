@@ -4,8 +4,18 @@ import org.apache.commons.validator.routines.EmailValidator;
 
 public class UserService {
 
-    public boolean emailCheck(String email){
+    public static boolean emailCheck(String email){
         return (EmailValidator.getInstance().isValid(email));
+    }
+
+    public static User newUser(long chatId){
+        String email;
+        do{
+            new TelegramApiController().sendText(chatId, "Введи адрес электронной почты: ");
+            email = new TelegramApiController().getLastMessage();
+        }while (!emailCheck(email));
+
+        return null;
     }
 
 }
