@@ -40,7 +40,6 @@ public class UserService {
             Boolean UserIsFound = false;
             // тут ищем юзера по chatId, если нет, то создаем новую запись
             // ToDo
-            if (chatId.equals(102219060L)) { UserIsFound = true; } // это заглушка, потом убрать
         }
         else if ("/buttons".equals(messageText)){ // ЭТО ПРИМЕР ВЫВОДА КНОПОК
             new TelegramApiController().sendButton(chatId, "Are you ready?", new String[]{"yes","no"});

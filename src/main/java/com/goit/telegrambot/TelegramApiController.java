@@ -34,8 +34,6 @@ public class TelegramApiController extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-//        Long chatId = update.getMessage().getChatId();
-//        String messageText = update.getMessage().getText();
         new UserService(update).analiseMessage();
     }
 
