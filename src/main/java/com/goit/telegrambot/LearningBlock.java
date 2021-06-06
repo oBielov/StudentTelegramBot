@@ -1,6 +1,7 @@
 package com.goit.telegrambot;
 
 import com.google.api.services.sheets.v4.Sheets;
+import com.google.api.services.sheets.v4.model.ValueRange;
 import lombok.Data;
 import lombok.SneakyThrows;
 
@@ -25,7 +26,11 @@ public class LearningBlock {
         return GoogleApiConfig.getProperties().getProperty("spreadsheet_id");
     }
 
-    public void receiveQuestions(String sheetTitle){
+    @SneakyThrows
+    public List<List<Object>> receiveQuestions(){
+        ValueRange response = googleService.spreadsheets().values()
+                .get(sheetId, groupId)
+                .execute();
 
     }
 
