@@ -1,24 +1,32 @@
 package com.goit.telegrambot;
 
-import java.util.Objects;
+import lombok.Data;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
+import java.util.Objects;
+@Data
+@RequiredArgsConstructor
 public class User {
 
     //id диалога
-    private long chatId;
+    @NonNull
+    private Long chatId;
     //если можно будет передать по api
     private String nickname;
 
     private String email;
     private String groupName;
 
-    public User(long chatId, String email, String groupName) {
+
+
+    /*public User(long chatId, String email, String groupName) {
         this.chatId = chatId;
         this.email = email;
         this.groupName = groupName;
-    }
+    }*/
 
-    public long getChatId() {
+    /*public long getChatId() {
         return chatId;
     }
 
@@ -50,5 +58,5 @@ public class User {
                 ", email='" + email + '\'' +
                 ", groupName='" + groupName + '\'' +
                 '}';
-    }
+    }*/
 }
