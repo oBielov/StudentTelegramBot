@@ -14,7 +14,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 public class TelegramApiController extends TelegramLongPollingBot {
     private static Properties appProperties;
@@ -32,25 +34,10 @@ public class TelegramApiController extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        if (update.hasMessage() && update.getMessage().hasText()){
-            handleMessageUpdate(update);
-        }
-        if (update.hasCallbackQuery()){
-             handleCallbackQueryUpdate(update);
-        }
-    }
-
-    // Получить и обработать действие юзера
-    private  void handleMessageUpdate(Update update) {
         Long chatId = update.getMessage().getChatId();
         String messageText = update.getMessage().getText();
-         //тут вызов метода класса, который обрабатывает апдейты от телеграмбота
-        new TestService(chatId, messageText).analiseMessage();
+        new UserService(update).analiseMessage();
     }
-
-//    public Long getLastChatId() { return lastChatId; }
-//
-//    public String getLastMessage() { return lastMessage; }
 
     // написать юзеру текст
     public void sendText(Long chatId, String text){
@@ -68,7 +55,7 @@ public class TelegramApiController extends TelegramLongPollingBot {
     public void sendButton(Long chatId, String text, String[] buttons){
         SendMessage sendMessageRequest = new SendMessage();
         sendMessageRequest.setChatId(chatId.toString());
-        sendMessageRequest.setText("Are you ready?");
+        sendMessageRequest.setText(text);
         sendMessageRequest.setReplyMarkup(createKeyboard(buttons));
         try {
             sendApiMethod(sendMessageRequest);
@@ -81,27 +68,11 @@ public class TelegramApiController extends TelegramLongPollingBot {
     private ReplyKeyboard createKeyboard(String[] buttons){
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
         // добавить формирование листа с кнопками
-        keyboard.setKeyboard(
-                Collections.singletonList(
-                        Arrays.asList(
-                                InlineKeyboardButton.builder().text("YES").callbackData("answer_yes").build(),
-                                InlineKeyboardButton.builder().text("NO").callbackData("answer_no").build()
-                        )
-                )
-        );
+        List<InlineKeyboardButton> listButtons = Arrays.stream(buttons)
+                .map(p -> InlineKeyboardButton.builder().text(p).callbackData(p).build())
+                .collect(Collectors.toList());
+        keyboard.setKeyboard(Collections.singletonList(listButtons));
         return keyboard;
-    }
-
-    //
-    private void handleCallbackQueryUpdate(Update update){
-        String callbackQuery = update.getCallbackQuery().getData();
-        Long chatId = update.getCallbackQuery().getFrom().getId();
-        if ("answer_yes".equals(callbackQuery)){
-            sendText(chatId,"It's all right ;) ");
-        }
-        else if ("answer_no".equals(callbackQuery)){
-            sendText(chatId,"Go to learn!");
-        }
     }
 
     /**
