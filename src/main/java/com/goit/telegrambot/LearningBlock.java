@@ -22,7 +22,7 @@ public class LearningBlock {
     }
 
     @SneakyThrows
-    public List<List<Object>> receiveQuestions(){
+    private List<List<Object>> receiveQuestions(){
         ValueRange response = GoogleApiConfig.service().spreadsheets().values()
                 .get(sheetId, "JavaScrip!A4:C88")
                 .execute();
