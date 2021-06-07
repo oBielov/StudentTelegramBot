@@ -14,7 +14,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 public class TelegramApiController extends TelegramLongPollingBot {
     private static Properties appProperties;
@@ -30,63 +32,35 @@ public class TelegramApiController extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        if (update.hasMessage() && update.getMessage().hasText() ){
-            handleMessageUpdate(update);
-        }
+        new UserService(update).analiseMessage();
     }
 
-    // Получить и обработать действие юзера
-    private  void handleMessageUpdate(Update update) {
-        Long chatId = update.getMessage().getChatId();
-        String messageText = update.getMessage().getText();
-        //sendText(chatId, "Ви написали: " + messageText);
-        if ("/start".equals(messageText)){
-            // это старт!
-            sendText(chatId, "Введите электронную почту: ");
-            // нужен статус, что ждем почту и ничего не давать делать (кроме "/start"), пока почта не введена
-        }
-        else {
-            sendText(chatId, "Ви написали: " + messageText);
-            //sendButton(chatId);
-        }
-    }
-
-    // написать юзеру текст
-    private void sendText(Long chatId, String text){
-        SendMessage sendMessageRequest = new SendMessage();
-        sendMessageRequest.setChatId(chatId.toString()); //who should get the message? the sender from which we got the message...
-        sendMessageRequest.setText(text);
-        sendMessageRequest.setReplyMarkup(createKeyboard());
-        try {
-            sendApiMethod(sendMessageRequest);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }//end catch()
-    }
-
-    // вывести юзеру кнопки
-    private void sendButton(Long chatId){
+    // text to user
+    @SneakyThrows
+    public void sendText(Long chatId, String text){
         SendMessage sendMessageRequest = new SendMessage();
         sendMessageRequest.setChatId(chatId.toString());
-        sendMessageRequest.setReplyMarkup(createKeyboard());
-        try {
-            sendApiMethod(sendMessageRequest);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }//end catch()
+        sendMessageRequest.setText(text);
+        sendApiMethod(sendMessageRequest);
     }
 
-    // создать кнопки
-    private ReplyKeyboard createKeyboard(){
+    // buttons to user
+    @SneakyThrows
+    public void sendButton(Long chatId, String text, String[] buttons){
+        SendMessage sendMessageRequest = new SendMessage();
+        sendMessageRequest.setChatId(chatId.toString());
+        sendMessageRequest.setText(text);
+        sendMessageRequest.setReplyMarkup(createKeyboard(buttons));
+        sendApiMethod(sendMessageRequest);
+    }
+
+    // create buttons
+    private ReplyKeyboard createKeyboard(String[] buttons){
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
-        keyboard.setKeyboard(
-                Collections.singletonList(
-                        Arrays.asList(
-                                InlineKeyboardButton.builder().text("YES").callbackData("yes").build(),
-                                InlineKeyboardButton.builder().text("NO").callbackData("no").build()
-                        )
-                )
-        );
+        List<InlineKeyboardButton> listButtons = Arrays.stream(buttons)
+                .map(p -> InlineKeyboardButton.builder().text(p).callbackData(p).build())
+                .collect(Collectors.toList());
+        keyboard.setKeyboard(Collections.singletonList(listButtons));
         return keyboard;
     }
 
@@ -110,4 +84,3 @@ public class TelegramApiController extends TelegramLongPollingBot {
         return appProperties;
     }
 }
-
