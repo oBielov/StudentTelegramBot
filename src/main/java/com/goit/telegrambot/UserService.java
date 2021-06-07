@@ -40,17 +40,10 @@ public class UserService {
 
     // Получить и обработать текстовое сообщение юзера
     private  void handleMessageUpdate(Update update) {
-        //String eMail = "";
-        //String groupNumber = "";
         Long chatId = update.getMessage().getChatId();
         String messageText = update.getMessage().getText();
         if ("/start".equals(messageText)){
-            //eMail = "";
-            //groupNumber = "";
-            //Boolean UserIsFound = false;
-            //new TelegramApiController().sendText(chatId,chatId.toString());
             // тут ищем юзера по chatId, если нет, то создаем новую запись
-            // ToDo
             if (UserList.isUserExist(chatId)){
                 System.out.println("Continue");
             }
@@ -61,11 +54,10 @@ public class UserService {
             new TelegramApiController().sendButton(chatId, "Are you ready?", new String[]{"yes","no"});
         }
         // проверяем наличие емейла и номера группы
-        // ToDo
         eMail = UserList.getEmail(chatId); // это заглушка, потом убрать
         groupNumber = UserList.getGroupNumber(chatId); // это заглушка, потом убрать
         if (eMail.isBlank()){
-            // проверить валидность мессаджтекст на емейл если тру записываем в юзер, запрос группы
+            // проверить валидность мессаджтекст на емейл если тру записываем в юзер
             if (EmailValidator.getInstance().isValid(messageText)){
                 //users.get(chatId).setEmail(messageText);
                 UserList.addEmail(chatId, messageText);
@@ -84,10 +76,10 @@ public class UserService {
 
             if (groupNumber.isBlank() & !messageText.equals(eMail)) {
                 UserList.addGroupNumber(chatId, messageText);
-                new TelegramApiController().sendText(chatId, "Welcome aboard");
-                new TelegramApiController().sendText(chatId, "Приветствуем тебя студент, этот бот поможет тебе подготовится к техническим собеседованиям по вебразработке");
-                /* 3 конпки HTML/CSS JS React + кнопка "Настройки"*/
-                new TelegramApiController().sendButton(chatId, "но прежде тебе нужно выбрать блок изучения",
+                /* Приветствие и 3 конпки HTML/CSS JS React + кнопка "Настройки"*/
+                new TelegramApiController().sendButton(chatId, "Welcome aboard!\n" +
+                        "Приветствуем тебя студент, этот бот поможет тебе подготовится к техническим собеседованиям по вебразработке/n" +
+                        "но, прежде тебе нужно выбрать блок изучения",
                         new String[]{"HTML/CSS","JS","React","Настройки"});
             }
             else new TelegramApiController().sendText(chatId, "Введите номер группы:");
