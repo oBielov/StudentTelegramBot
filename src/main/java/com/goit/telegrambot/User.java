@@ -6,16 +6,13 @@ public class User {
 
     //id диалога
     private long chatId;
-    //если можно будет передать по api
-    private String nickname;
 
     private String email;
     private String groupName;
+    private LearningBlock learningBlock;
 
-    public User(long chatId, String email, String groupName) {
+    public User(long chatId) {
         this.chatId = chatId;
-        this.email = email;
-        this.groupName = groupName;
     }
 
     public long getChatId() {
@@ -28,6 +25,22 @@ public class User {
 
     public String getGroupName() {
         return groupName;
+    }
+
+    public LearningBlock getLearningBlock() {
+        return learningBlock;
+    }
+
+    public void setLearningBlock(LearningBlock learningBlock) {
+        this.learningBlock = learningBlock;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 
     @Override
