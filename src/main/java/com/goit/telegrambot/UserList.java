@@ -29,4 +29,9 @@ public class UserList {
     public static boolean isUserExist (long chatId){
         return users.containsKey(chatId);
     }
+
+    public static void setCurrentQuestion (long chatId, int currentQuestion){
+        users.get(chatId).setCurrentQuestion(currentQuestion);
+    }
+
 }

@@ -14,11 +14,13 @@ public class User {
 
     private String email;
     private String groupName;
+    private int currentQuestion;
 
     public User(long chatId){
         this.chatId = chatId;
         this.email = "";
         this.groupName = "";
+        this.currentQuestion = 0;
     }
 
     public User(long chatId, String email, String groupName) {
