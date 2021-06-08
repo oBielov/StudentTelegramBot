@@ -1,0 +1,9 @@
+# Default ignored files
+*.xml
+/target
+.idea
+*.properties
+*.json
+
+
+

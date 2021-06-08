@@ -19,6 +19,7 @@ public class UserService {
     }
 
     public void analiseMessage() {
+        UserInactivityTimer.updateUserCheckInactivity(update.getMessage().getChatId());
         if (update.hasMessage() && update.getMessage().hasText()) { handleMessageUpdate(update); }
         if (update.hasCallbackQuery()) { handleCallbackQueryUpdate(update); }
     }
