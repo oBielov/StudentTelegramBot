@@ -30,8 +30,8 @@ public class UserList {
         return users.containsKey(chatId);
     }
 
-    public static void setCurrentQuestion (long chatId, int currentQuestion){
-        users.get(chatId).setCurrentQuestion(currentQuestion);
+    public static void updateCurrentQuestion (long chatId, int currentQuestion){
+        users.get(chatId).setCurrentQuestion(currentQuestion+1);
     }
 
 }

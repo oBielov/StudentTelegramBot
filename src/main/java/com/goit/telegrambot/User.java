@@ -12,14 +12,17 @@ public class User {
 
     private String email;
     private String groupName;
-    private LearningBlock currentQuestion;
+    private LearningBlock currentLearningBlock;
 
     public User(long chatId){
         this.chatId = chatId;
         this.email = "";
         this.groupName = "";
-        this.currentQuestion.setGroupId("");
-        this.currentQuestion.setCurrentQuestion(0);
-        this.currentQuestion.getQuestion(0);
+        this.currentLearningBlock.setGroupId("");
+        this.currentLearningBlock.setCurrentQuestion(0);
+    }
+
+    public void setCurrentQuestion (int question){
+        this.currentLearningBlock.setCurrentQuestion(question);
     }
 }
