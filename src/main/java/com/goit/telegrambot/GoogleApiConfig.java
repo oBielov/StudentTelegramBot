@@ -31,6 +31,24 @@ public class GoogleApiConfig {
     private static Properties appProperties;
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance(); //JsonFactory for Sheets.Builder
     private static final String APP_NAME = "Student Telegram Bot"; //custom application name
+    private static GoogleApiConfig instance;
+
+    private GoogleApiConfig(){}
+
+    /**
+     * Singletone init of class. Lazy init with Double check blocking, to avoid overhead problem.
+     * @return GoogleApiConfig instance
+     */
+    public static GoogleApiConfig getInstance(){
+        if (instance == null){
+            synchronized (GoogleApiConfig.class){
+                if (instance == null){
+                    instance = new GoogleApiConfig();
+                }
+            }
+        }
+        return instance;
+    }
 
 
     /**

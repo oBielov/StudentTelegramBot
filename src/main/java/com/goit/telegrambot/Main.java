@@ -1,6 +1,7 @@
 package com.goit.telegrambot;
 
 import com.google.api.services.sheets.v4.Sheets;
+import com.google.api.services.sheets.v4.model.Sheet;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.BotSession;
@@ -15,7 +16,6 @@ public class Main {
         UserNotificationTimer.run(20, 33);
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
         telegramBotsApi.registerBot(new TelegramApiController());
-        Sheets googleService = GoogleApiConfig.service();
     }
 
 }
