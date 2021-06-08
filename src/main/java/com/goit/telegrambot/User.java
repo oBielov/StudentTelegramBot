@@ -18,8 +18,8 @@ public class User {
         this.chatId = chatId;
         this.email = "";
         this.groupName = "";
-        this.currentLearningBlock.setGroupId("");
-        this.currentLearningBlock.setCurrentQuestion(0);
+        //this.currentLearningBlock.setGroupId("");
+        //this.currentLearningBlock.setCurrentQuestion(0);
     }
 
     public void setCurrentQuestion (int question){
