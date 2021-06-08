@@ -6,16 +6,16 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class TelegramApiController extends TelegramLongPollingBot {
@@ -44,13 +44,22 @@ public class TelegramApiController extends TelegramLongPollingBot {
         sendApiMethod(sendMessageRequest);
     }
 
-    // buttons to user
+    // buttons inline
     @SneakyThrows
     public void sendButton(Long chatId, String text, String[] buttons){
         SendMessage sendMessageRequest = new SendMessage();
         sendMessageRequest.setChatId(chatId.toString());
         sendMessageRequest.setText(text);
         sendMessageRequest.setReplyMarkup(createKeyboard(buttons));
+        sendApiMethod(sendMessageRequest);
+    }
+    // buttons for menu
+    @SneakyThrows
+    public void sendMenuButton(Long chatId, String text, String[][] buttons){
+        SendMessage sendMessageRequest = new SendMessage();
+        sendMessageRequest.setChatId(chatId.toString());
+        sendMessageRequest.setText(text);
+        sendMessageRequest.setReplyMarkup(createMenuKeyboard(buttons));
         sendApiMethod(sendMessageRequest);
     }
 
@@ -62,6 +71,23 @@ public class TelegramApiController extends TelegramLongPollingBot {
                 .collect(Collectors.toList());
         keyboard.setKeyboard(Collections.singletonList(listButtons));
         return keyboard;
+    }
+
+    // create menu buttons
+    private ReplyKeyboard createMenuKeyboard(String[][] buttons){
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        replyKeyboardMarkup.setSelective(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(true);
+        List<KeyboardRow> keyboard = new ArrayList<>();
+        for (int i = 0; i < buttons.length; i++){
+            List<String> list = Arrays.stream(buttons[i]).collect(Collectors.toList());
+            KeyboardRow keyboardRow = new KeyboardRow();
+            keyboardRow.addAll(list);
+            keyboard.add(keyboardRow);
+        }
+        replyKeyboardMarkup.setKeyboard(keyboard);
+        return replyKeyboardMarkup;
     }
 
     /**

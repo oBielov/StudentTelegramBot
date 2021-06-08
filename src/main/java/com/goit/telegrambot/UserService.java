@@ -1,99 +1,107 @@
 package com.goit.telegrambot;
 
-import com.google.api.services.sheets.v4.SheetsRequestInitializer;
+import com.google.api.services.sheets.v4.model.Sheet;
+import com.google.api.services.sheets.v4.model.SheetProperties;
+import com.google.api.services.sheets.v4.model.Spreadsheet;
+import lombok.SneakyThrows;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.Properties;
+
 public class UserService {
     private Update update;
-
-    private boolean isEmail = false;
     private String eMail;
     private String groupNumber;
+    private String[] sections;
 
     public UserService(Update update) {
         this.update = update;
     }
 
     public void analiseMessage() {
+        //UserInactivityTimer.updateUserCheckInactivity(update.getMessage().getChatId());
         if (update.hasMessage() && update.getMessage().hasText()) { handleMessageUpdate(update); }
         if (update.hasCallbackQuery()) { handleCallbackQueryUpdate(update); }
     }
 
     // Получить и обработать текстовое сообщение юзера
+    @SneakyThrows
     private  void handleMessageUpdate(Update update) {
         Long chatId = update.getMessage().getChatId();
         String messageText = update.getMessage().getText();
+        TelegramApiController telegramApiController = new TelegramApiController();
+
         if ("/start".equals(messageText)){
-            // тут ищем юзера по chatId, если нет, то создаем новую запись
-            if (UserList.isUserExist(chatId)){
-                System.out.println("Continue");
-            }
-            else UserList.newUser(chatId);
-
+            if (!UserList.isUserExist(chatId)){
+                UserList.newUser(chatId); }
         }
-        else if ("/buttons".equals(messageText)){ // ЭТО ПРИМЕР ВЫВОДА КНОПОК
-            new TelegramApiController().sendButton(chatId, "Are you ready?", new String[]{"yes","no"});
-        }
-        // проверяем наличие емейла и номера группы
-        eMail = UserList.getEmail(chatId); // это заглушка, потом убрать
-        groupNumber = UserList.getGroupNumber(chatId); // это заглушка, потом убрать
+        // checking Email & GroupNumber
+        eMail = UserList.getEmail(chatId);
+        groupNumber = UserList.getGroupNumber(chatId);
         if (eMail.isBlank()){
-            // проверить валидность мессаджтекст на емейл если тру записываем в юзер
             if (EmailValidator.getInstance().isValid(messageText)){
-                //users.get(chatId).setEmail(messageText);
                 UserList.addEmail(chatId, messageText);
-                isEmail = true;
-                new TelegramApiController().sendText(chatId,"Введите номер группы:");
+                eMail = UserList.getEmail(chatId);
             }
-            //если нет тосообщение->
-            else {
-                new TelegramApiController().sendText(chatId,"Введите электронный адрес:");
-            }
+            else { telegramApiController.sendText(chatId,"Введите электронный адрес:"); }
         }
-        else if(groupNumber.isBlank() & !eMail.isBlank()) {
-
+        if(groupNumber.isBlank() & !eMail.isBlank()) {
             if (groupNumber.isBlank() & !messageText.equals(eMail)) {
                 UserList.addGroupNumber(chatId, messageText);
-                /* Приветствие и 3 конпки HTML/CSS JS React + кнопка "Настройки"*/
-                new TelegramApiController().sendButton(chatId, "Welcome aboard!\n" +
-                                "Приветствуем тебя студент, этот бот поможет тебе подготовится к техническим собеседованиям по вебразработке/n" +
-                                "но, прежде тебе нужно выбрать блок изучения",
-                        new String[]{"HTML/CSS","JS","React","Настройки"});
+                groupNumber = UserList.getGroupNumber(chatId);
             }
-            else new TelegramApiController().sendText(chatId, "Введите номер группы:");
+            else telegramApiController.sendText(chatId, "Введите номер группы:");
+        }
+        if (UserList.isUserExist(chatId) && UserList.getCurrentQuestion(chatId)==0
+                && !groupNumber.isBlank() && !eMail.isBlank()) {
 
+//            Properties properties = GoogleApiConfig.getProperties();
+//            String spreadSheetID = properties.getProperty("spreadsheet_id");
+//            Spreadsheet spreadsheetMetadata = GoogleApiConfig.service().spreadsheets().get(spreadSheetID).execute();
+//            List<Sheet> sheets = spreadsheetMetadata.getSheets();
+//            sheets.forEach(sheet - > ((SheetProperties)(sheet.get("properties")).get("title");
+            String[] sections = new String[4];//{"HTML/CSS", "JS", "React", "Настройки"};
+            sections[0] = "HTML/CSS";
+            sections[1] = "JS";
+            sections[2] = "React";
+            sections[3] = "Настройки";
+
+            telegramApiController.sendButton(chatId,"Приветствуем тебя студент, этот бот поможет тебе подготовиться" +
+                            " к техническим собеседованиям по вебразработке\n" +
+                            "но, прежде тебе нужно выбрать блок изучения",
+                    sections);
         }
-        else if (UserList.isUserExist(chatId)) {
-            new TelegramApiController().sendText(chatId, "Welcome aboard");
-            new TelegramApiController().sendText(chatId, "Приветствуем тебя студент, этот бот поможет тебе подготовится к техническим собеседованиям по вебразработке");
-            /* 3 конпки HTML/CSS JS React + кнопка "Настройки"*/
-            new TelegramApiController().sendButton(chatId, "но прежде тебе нужно выбрать блок изучения",
-                    new String[]{"HTML/CSS","JS","React","Настройки"});
-        }
+//        if (UserList.getCurrentQuestion(chatId)!=0){
+//            UserList.setCurrentQuestion(chatId, 1);
+//            telegramApiController.sendText(chatId, "Выводим очередной вопрос...");
+//        }
     }
 
     // Получить и обработать нажатие юзером КНОПКИ
     private void handleCallbackQueryUpdate(Update update){
         Long chatId = update.getCallbackQuery().getFrom().getId();
         String callbackQuery = update.getCallbackQuery().getData();
-        if ("yes".equals(callbackQuery)){
-            new TelegramApiController().sendText(chatId,"It's all right ;) ");
-        }
-        if ("no".equals(callbackQuery)){
-            new TelegramApiController().sendText(chatId,"Go to learn!");
-        }
-        if ("HTML/CSS".equals(callbackQuery)){
-            new TelegramApiController().sendText(chatId,"выбран раздел обучения '"+callbackQuery+"'");
-        }
-        if ("JS".equals(callbackQuery)){
-            new TelegramApiController().sendText(chatId,"выбран раздел обучения '"+callbackQuery+"'");
-        }
-        if ("React".equals(callbackQuery)){
-            new TelegramApiController().sendText(chatId,"выбран раздел обучения '"+callbackQuery+"'");
-        }
-        if ("Настройки".equals(callbackQuery)){
-            new TelegramApiController().sendText(chatId,"Выводим меню настройки бота");
+        TelegramApiController telegramApiController = new TelegramApiController();
+
+        String[] sections = new String[4];//{"HTML/CSS", "JS", "React", "Настройки"};
+        sections[0] = "HTML/CSS";
+        sections[1] = "JS";
+        sections[2] = "React";
+        sections[3] = "Настройки";
+//        if (){
+//            telegramApiController.sendText(chatId,"выбран раздел обучения '"+callbackQuery+"'");
+//        }
+        if ("Настройки".equals(callbackQuery)) {
+            String[][] buttons = new String[][] {
+                {"08:00", "09:00", "10:00", "11:00"},
+                {"12:00", "13:00", "14:00", "15:00"},
+                {"16:00", "17:00", "18:00", "19:00"}
+            }; // Выводим под полем ввода меню настройки времени
+            telegramApiController.sendMenuButton(chatId,"time", buttons);
         }
     }
 }
