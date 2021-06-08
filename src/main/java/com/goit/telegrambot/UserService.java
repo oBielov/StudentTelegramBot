@@ -4,9 +4,6 @@ import com.google.api.services.sheets.v4.SheetsRequestInitializer;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class UserService {
     private Update update;
 
