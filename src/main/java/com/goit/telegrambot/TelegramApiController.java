@@ -21,8 +21,6 @@ import java.util.stream.Collectors;
 public class TelegramApiController extends TelegramLongPollingBot {
     private static Properties appProperties;
     private static final String PROPERTIES_FILEPATH = "/application.properties";
-//    private Long lastChatId;
-//    private String lastMessage;
 
     @SneakyThrows
     @Override
@@ -34,40 +32,31 @@ public class TelegramApiController extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        Long chatId = update.getMessage().getChatId();
-        String messageText = update.getMessage().getText();
-        //new UserService(update).analiseMessage();
+        new UserService(update).analiseMessage();
     }
 
-    // написать юзеру текст
+    // text to user
+    @SneakyThrows
     public void sendText(Long chatId, String text){
         SendMessage sendMessageRequest = new SendMessage();
         sendMessageRequest.setChatId(chatId.toString());
         sendMessageRequest.setText(text);
-        try {
-            sendApiMethod(sendMessageRequest);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }//end catch()
+        sendApiMethod(sendMessageRequest);
     }
 
-    // вывести юзеру кнопки
+    // buttons to user
+    @SneakyThrows
     public void sendButton(Long chatId, String text, String[] buttons){
         SendMessage sendMessageRequest = new SendMessage();
         sendMessageRequest.setChatId(chatId.toString());
         sendMessageRequest.setText(text);
         sendMessageRequest.setReplyMarkup(createKeyboard(buttons));
-        try {
-            sendApiMethod(sendMessageRequest);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }//end catch()
+        sendApiMethod(sendMessageRequest);
     }
 
-    // создать кнопки
+    // create buttons
     private ReplyKeyboard createKeyboard(String[] buttons){
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
-        // добавить формирование листа с кнопками
         List<InlineKeyboardButton> listButtons = Arrays.stream(buttons)
                 .map(p -> InlineKeyboardButton.builder().text(p).callbackData(p).build())
                 .collect(Collectors.toList());
@@ -95,4 +84,3 @@ public class TelegramApiController extends TelegramLongPollingBot {
         return appProperties;
     }
 }
-
