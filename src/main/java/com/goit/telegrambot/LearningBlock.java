@@ -16,7 +16,6 @@ import java.util.List;
 public class LearningBlock {
 
     private String groupId; //name of group (i.e. JavaScript or HTML)
-    private int currentQuestion;//cursor of current question
     private List<Question> questions = new ArrayList<>();//list for Question objects
     private static String sheetId = getSheetId();
 
