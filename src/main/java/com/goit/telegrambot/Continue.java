@@ -9,10 +9,10 @@ public class Continue {
         StringBuilder builder = new StringBuilder();
         builder.append("<b>Вопрос:</b> \n")
                 .append(current.getQuestion())
-                .append("\n")
+                .append("\n\n")
                 .append("<b>Ответ:</b> \n")
                 .append(current.getAnswer())
-                .append("\n")
+                .append("\n\n")
                 .append("<b>Видео по теме:</b> \n")
                 .append(current.getUrl());
         return builder.toString();
