@@ -20,7 +20,6 @@ public class UserService {
     }
 
     public void analiseMessage() {
-
         if (update.hasMessage() && update.getMessage().hasText()) { handleMessageUpdate(update); }
         if (update.hasCallbackQuery()) { handleCallbackQueryUpdate(update); }
     }
