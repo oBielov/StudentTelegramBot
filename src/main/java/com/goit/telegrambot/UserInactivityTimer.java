@@ -9,24 +9,21 @@ public class UserInactivityTimer {
     private static Map<Long, Timer> timerMap = new HashMap<>();
     private static final TelegramApiController inactivityTelegramApiController = new TelegramApiController();
 
-    private UserInactivityTimer(){};
+    private UserInactivityTimer() {
+    }
 
 
-    private static void setUserCheckInactivity(Long chatId) {
+    //нужно использовать этот метод при любой активности User и его создании
+    public static void updateUserCheckInactivity(Long chatId) {
+        if (timerMap.containsKey(chatId)) {
+            timerMap.get(chatId).cancel();
+        }
         timerMap.put(chatId, new Timer());
         timerMap.get(chatId).schedule(new TimerTask() {
             @Override
             public void run() {
-                inactivityTelegramApiController.sendButton(chatId,"Продолжаем?", new String[]{"Да", "Нет"});
+                inactivityTelegramApiController.sendButton(chatId, "Продолжаем?", new String[]{"Да", "Нет"});
             }
-        }, 10*60*1000);//нужно поменять на время в задании 20 мин.
-    }
-
-    //нужно использовать этот метод при любой активности User и его создании
-    public static void updateUserCheckInactivity(Long chatId) {
-        if (timerMap.containsKey(chatId)){
-            timerMap.get(chatId).cancel();
-        }
-        setUserCheckInactivity(chatId);
+        }, 30 * 1000, 30 * 1000);//нужно поменять на время в задании 20 мин.
     }
 }

@@ -20,7 +20,7 @@ public class UserService {
     }
 
     public void analiseMessage() {
-        //UserInactivityTimer.updateUserCheckInactivity(update.getMessage().getChatId());
+
         if (update.hasMessage() && update.getMessage().hasText()) { handleMessageUpdate(update); }
         if (update.hasCallbackQuery()) { handleCallbackQueryUpdate(update); }
     }
@@ -29,6 +29,7 @@ public class UserService {
     @SneakyThrows
     private  void handleMessageUpdate(Update update) {
         Long chatId = update.getMessage().getChatId();
+        UserInactivityTimer.updateUserCheckInactivity(chatId); //апдейт таймера неактивности
         String messageText = update.getMessage().getText();
         TelegramApiController telegramApiController = new TelegramApiController();
 
@@ -74,6 +75,7 @@ public class UserService {
     // Получить и обработать нажатие юзером КНОПКИ
     private void handleCallbackQueryUpdate(Update update){
         Long chatId = update.getCallbackQuery().getFrom().getId();
+        UserInactivityTimer.updateUserCheckInactivity(chatId); //апдейт таймера неактивности
         String callbackQuery = update.getCallbackQuery().getData();
         TelegramApiController telegramApiController = new TelegramApiController();
 
