@@ -17,6 +17,7 @@ public class User {
     private String email;
     private String groupName;
     private int currentQuestion;
+    private LearningBlock learningBlock = new LearningBlock();
 
     public User(long chatId){
         this.chatId = chatId;
