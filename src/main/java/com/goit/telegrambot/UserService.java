@@ -1,11 +1,8 @@
 package com.goit.telegrambot;
 
-import com.google.api.services.sheets.v4.SheetsRequestInitializer;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import java.util.HashMap;
-import java.util.Map;
 
 public class UserService {
     private Update update;
@@ -19,7 +16,7 @@ public class UserService {
     }
 
     public void analiseMessage() {
-        UserInactivityTimer.updateUserCheckInactivity(update.getMessage().getChatId());
+        //UserInactivityTimer.updateUserCheckInactivity(update.getMessage().getChatId());
         if (update.hasMessage() && update.getMessage().hasText()) { handleMessageUpdate(update); }
         if (update.hasCallbackQuery()) { handleCallbackQueryUpdate(update); }
     }
