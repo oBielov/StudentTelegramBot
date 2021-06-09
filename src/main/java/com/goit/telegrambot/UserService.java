@@ -7,10 +7,7 @@ import lombok.SneakyThrows;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Properties;
+import java.util.*;
 
 public class UserService {
     private Update update;
@@ -59,17 +56,10 @@ public class UserService {
         if (UserList.isUserExist(chatId) && UserList.getCurrentQuestion(chatId)==0
                 && !groupNumber.isBlank() && !eMail.isBlank()) {
 
-//            Properties properties = GoogleApiConfig.getProperties();
-//            String spreadSheetID = properties.getProperty("spreadsheet_id");
-//            Spreadsheet spreadsheetMetadata = GoogleApiConfig.service().spreadsheets().get(spreadSheetID).execute();
-//            List<Sheet> sheets = spreadsheetMetadata.getSheets();
-//            sheets.forEach(sheet - > ((SheetProperties)(sheet.get("properties")).get("title");
-            String[] sections = new String[4];//{"HTML/CSS", "JS", "React", "Настройки"};
-            sections[0] = "HTML/CSS";
-            sections[1] = "JS";
-            sections[2] = "React";
-            sections[3] = "Настройки";
-
+            List<String> titles = getSections();
+            titles.add("Настройки");
+            String[] sections = new String[titles.size()];
+            sections = titles.toArray(sections);
             telegramApiController.sendButton(chatId,"Приветствуем тебя студент, этот бот поможет тебе подготовиться" +
                             " к техническим собеседованиям по вебразработке\n" +
                             "но, прежде тебе нужно выбрать блок изучения",
@@ -87,21 +77,30 @@ public class UserService {
         String callbackQuery = update.getCallbackQuery().getData();
         TelegramApiController telegramApiController = new TelegramApiController();
 
-        String[] sections = new String[4];//{"HTML/CSS", "JS", "React", "Настройки"};
-        sections[0] = "HTML/CSS";
-        sections[1] = "JS";
-        sections[2] = "React";
-        sections[3] = "Настройки";
-//        if (){
-//            telegramApiController.sendText(chatId,"выбран раздел обучения '"+callbackQuery+"'");
-//        }
+        List<String> titles = getSections();
+        String[] sections = new String[titles.size()];
+        sections = titles.toArray(sections);
+        if (titles.indexOf(callbackQuery) >=0) {
+            telegramApiController.sendText(chatId,"выбран раздел обучения '"+callbackQuery+"'");
+        }
         if ("Настройки".equals(callbackQuery)) {
             String[][] buttons = new String[][] {
                 {"08:00", "09:00", "10:00", "11:00"},
                 {"12:00", "13:00", "14:00", "15:00"},
                 {"16:00", "17:00", "18:00", "19:00"}
             }; // Выводим под полем ввода меню настройки времени
-            telegramApiController.sendMenuButton(chatId,"time", buttons);
+            telegramApiController.sendMenuButton(chatId,"Выберите в нижнем меню время напоминания", buttons);
         }
+    }
+
+    @SneakyThrows
+    private List<String> getSections() {
+        Properties properties = GoogleApiConfig.getProperties();
+        String spreadSheetID = properties.getProperty("spreadsheet_id");
+        Spreadsheet spreadsheetMetadata = GoogleApiConfig.service().spreadsheets().get(spreadSheetID).execute();
+        List<Sheet> sheets = spreadsheetMetadata.getSheets();
+        List<String> titles = new ArrayList<>();
+        sheets.forEach(sheet -> titles.add(((SheetProperties)sheet.get("properties")).get("title").toString()));            ArrayList<String> list = new ArrayList<>();
+        return titles;
     }
 }
