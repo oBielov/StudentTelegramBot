@@ -13,7 +13,7 @@ public class User {
     //@NonNull
     private Long chatId;
     private String nickname;
-
+    private int currentQuestion;
     private String email;
     private String groupName;
     private LearningBlock learningBlock = new LearningBlock();
