@@ -8,9 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -35,7 +33,11 @@ public class TelegramApiController extends TelegramLongPollingBot {
         new UserService(update).analiseMessage();
     }
 
-    // text to user
+    /**
+     * send a text to the telegram user
+     * @param chatId Long, ID current chat in telegram
+     * @param text String, message, which wrote to the telegram user
+     */
     @SneakyThrows
     public void sendText(Long chatId, String text){
         SendMessage sendMessageRequest = new SendMessage();
@@ -44,7 +46,12 @@ public class TelegramApiController extends TelegramLongPollingBot {
         sendApiMethod(sendMessageRequest);
     }
 
-    // buttons inline
+    /**
+     * create buttons inline  for the telegram user
+     * @param chatId Long, ID current chat in telegram
+     * @param text String, message, which wrote to the telegram user
+     * @param buttons array of buttons
+     */
     @SneakyThrows
     public void sendButton(Long chatId, String text, String[] buttons){
         SendMessage sendMessageRequest = new SendMessage();
@@ -53,7 +60,13 @@ public class TelegramApiController extends TelegramLongPollingBot {
         sendMessageRequest.setReplyMarkup(createKeyboard(buttons));
         sendApiMethod(sendMessageRequest);
     }
-    // buttons for menu
+
+    /**
+     * create menu with buttons (under the text-box) for the telegram user
+     * @param chatId Long, ID current chat in telegram
+     * @param text String, message, which wrote to the telegram user
+     * @param buttons array of array of buttons
+     */
     @SneakyThrows
     public void sendMenuButton(Long chatId, String text, String[][] buttons){
         SendMessage sendMessageRequest = new SendMessage();
@@ -63,7 +76,11 @@ public class TelegramApiController extends TelegramLongPollingBot {
         sendApiMethod(sendMessageRequest);
     }
 
-    // create buttons
+    /**
+     * create buttons (under the text-box) for method sendButton
+     * @return ReplyKeyboard - collection of buttons
+     * @param buttons array of buttons
+     */
     private ReplyKeyboard createKeyboard(String[] buttons){
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
         List<InlineKeyboardButton> listButtons = Arrays.stream(buttons)
@@ -73,7 +90,11 @@ public class TelegramApiController extends TelegramLongPollingBot {
         return keyboard;
     }
 
-    // create menu buttons
+    /**
+     * create buttons for method sendMenuButton
+     * @return ReplyKeyboard - collection of buttons
+     * @param buttons array of array of buttons
+     * */
     private ReplyKeyboard createMenuKeyboard(String[][] buttons){
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         replyKeyboardMarkup.setSelective(true);
