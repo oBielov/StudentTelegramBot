@@ -1,9 +1,6 @@
 package com.goit.telegrambot;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 public class UserInactivityTimer {
     private static Map<Long, Timer> timerMap = new HashMap<>();
@@ -17,13 +14,16 @@ public class UserInactivityTimer {
         timerMap.get(chatId).schedule(new TimerTask() {
             @Override
             public void run() {
-                inactivityTelegramApiController.sendButton(chatId,"Продолжаем?", new String[]{"Да", "Нет"});
+                ArrayList<String> listButtons = new ArrayList<>();
+                listButtons.add("Да");
+                listButtons.add("Нет");
+                inactivityTelegramApiController.sendButton(chatId,"Продолжаем?", new ArrayList<String>(listButtons));
             }
-        }, 10*60*1000);//нужно поменять на время в задании 20 мин.
+        }, 5*60*1000);//нужно поменять на время в задании 20 мин.
     }
 
     //нужно использовать этот метод при любой активности User и его создании
-    public static void updateUserCheckInactivity(Long chatId) {
+    public static synchronized void updateUserCheckInactivity(Long chatId) {
         if (timerMap.containsKey(chatId)){
             timerMap.get(chatId).cancel();
         }

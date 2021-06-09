@@ -20,7 +20,7 @@ public class UserService {
     }
 
     public void analiseMessage() {
-        //UserInactivityTimer.updateUserCheckInactivity(update.getMessage().getChatId());
+        UserInactivityTimer.updateUserCheckInactivity(update.getMessage().getChatId());
         if (update.hasMessage() && update.getMessage().hasText()) { handleMessageUpdate(update); }
         if (update.hasCallbackQuery()) { handleCallbackQueryUpdate(update); }
     }
@@ -55,15 +55,12 @@ public class UserService {
         }
         if (UserList.isUserExist(chatId) && UserList.getCurrentQuestion(chatId)==0
                 && !groupNumber.isBlank() && !eMail.isBlank()) {
-
             List<String> titles = getSections();
             titles.add("Настройки");
-            String[] sections = new String[titles.size()];
-            sections = titles.toArray(sections);
             telegramApiController.sendButton(chatId,"Приветствуем тебя студент, этот бот поможет тебе подготовиться" +
                             " к техническим собеседованиям по вебразработке\n" +
                             "но, прежде тебе нужно выбрать блок изучения",
-                    sections);
+                    titles);
         }
 //        if (UserList.getCurrentQuestion(chatId)!=0){
 //            UserList.setCurrentQuestion(chatId, 1);
@@ -78,8 +75,8 @@ public class UserService {
         TelegramApiController telegramApiController = new TelegramApiController();
 
         List<String> titles = getSections();
-        String[] sections = new String[titles.size()];
-        sections = titles.toArray(sections);
+//        String[] sections = new String[titles.size()];
+//        sections = titles.toArray(sections);
         if (titles.indexOf(callbackQuery) >=0) {
             telegramApiController.sendText(chatId,"выбран раздел обучения '"+callbackQuery+"'");
         }
