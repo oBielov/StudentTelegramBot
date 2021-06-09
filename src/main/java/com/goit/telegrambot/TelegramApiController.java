@@ -6,16 +6,14 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class TelegramApiController extends TelegramLongPollingBot {
@@ -35,7 +33,11 @@ public class TelegramApiController extends TelegramLongPollingBot {
         new UserService(update).analiseMessage();
     }
 
-    // text to user
+    /**
+     * send a text to the telegram user
+     * @param chatId Long, ID current chat in telegram
+     * @param text String, message, which wrote to the telegram user
+     */
     @SneakyThrows
     public void sendText(Long chatId, String text){
         SendMessage sendMessageRequest = new SendMessage();
@@ -44,7 +46,12 @@ public class TelegramApiController extends TelegramLongPollingBot {
         sendApiMethod(sendMessageRequest);
     }
 
-    // buttons to user
+    /**
+     * create buttons inline  for the telegram user
+     * @param chatId Long, ID current chat in telegram
+     * @param text String, message, which wrote to the telegram user
+     * @param buttons array of buttons
+     */
     @SneakyThrows
     public void sendButton(Long chatId, String text, String[] buttons){
         SendMessage sendMessageRequest = new SendMessage();
@@ -54,7 +61,26 @@ public class TelegramApiController extends TelegramLongPollingBot {
         sendApiMethod(sendMessageRequest);
     }
 
-    // create buttons
+    /**
+     * create menu with buttons (under the text-box) for the telegram user
+     * @param chatId Long, ID current chat in telegram
+     * @param text String, message, which wrote to the telegram user
+     * @param buttons array of array of buttons
+     */
+    @SneakyThrows
+    public void sendMenuButton(Long chatId, String text, String[][] buttons){
+        SendMessage sendMessageRequest = new SendMessage();
+        sendMessageRequest.setChatId(chatId.toString());
+        sendMessageRequest.setText(text);
+        sendMessageRequest.setReplyMarkup(createMenuKeyboard(buttons));
+        sendApiMethod(sendMessageRequest);
+    }
+
+    /**
+     * create buttons (under the text-box) for method sendButton
+     * @return ReplyKeyboard - collection of buttons
+     * @param buttons array of buttons
+     */
     private ReplyKeyboard createKeyboard(String[] buttons){
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
         List<InlineKeyboardButton> listButtons = Arrays.stream(buttons)
@@ -62,6 +88,27 @@ public class TelegramApiController extends TelegramLongPollingBot {
                 .collect(Collectors.toList());
         keyboard.setKeyboard(Collections.singletonList(listButtons));
         return keyboard;
+    }
+
+    /**
+     * create buttons for method sendMenuButton
+     * @return ReplyKeyboard - collection of buttons
+     * @param buttons array of array of buttons
+     * */
+    private ReplyKeyboard createMenuKeyboard(String[][] buttons){
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        replyKeyboardMarkup.setSelective(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(true);
+        List<KeyboardRow> keyboard = new ArrayList<>();
+        for (int i = 0; i < buttons.length; i++){
+            List<String> list = Arrays.stream(buttons[i]).collect(Collectors.toList());
+            KeyboardRow keyboardRow = new KeyboardRow();
+            keyboardRow.addAll(list);
+            keyboard.add(keyboardRow);
+        }
+        replyKeyboardMarkup.setKeyboard(keyboard);
+        return replyKeyboardMarkup;
     }
 
     /**

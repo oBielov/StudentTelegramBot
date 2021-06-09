@@ -26,6 +26,10 @@ public class UserList {
         return users.get(chatId).getGroupName();
     }
 
+    public static int getCurrentQuestion(long chatId){
+        return users.get(chatId).getCurrentQuestion();
+    }
+
     public static boolean isUserExist (long chatId){
         return users.containsKey(chatId);
     }

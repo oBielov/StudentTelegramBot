@@ -19,7 +19,7 @@ public class UserInactivityTimer {
             public void run() {
                 inactivityTelegramApiController.sendButton(chatId,"Продолжаем?", new String[]{"Да", "Нет"});
             }
-        }, 3*1000);//нужно поменять на время в задании 20 мин.
+        }, 10*60*1000);//нужно поменять на время в задании 20 мин.
     }
 
     //нужно использовать этот метод при любой активности User и его создании
