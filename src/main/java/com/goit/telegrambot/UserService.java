@@ -14,6 +14,7 @@ public class UserService {
     private String eMail;
     private String groupNumber;
     private String[] sections;
+    private TelegramApiController telegramApiController = TelegramApiController.getInstance();
 
     public UserService(Update update) {
         this.update = update;
@@ -30,7 +31,6 @@ public class UserService {
     private  void handleMessageUpdate(Update update) {
         Long chatId = update.getMessage().getChatId();
         String messageText = update.getMessage().getText();
-        TelegramApiController telegramApiController = new TelegramApiController();
 
         if ("/start".equals(messageText)){
             if (!UserList.isUserExist(chatId)){
@@ -75,13 +75,14 @@ public class UserService {
     private void handleCallbackQueryUpdate(Update update){
         Long chatId = update.getCallbackQuery().getFrom().getId();
         String callbackQuery = update.getCallbackQuery().getData();
-        TelegramApiController telegramApiController = new TelegramApiController();
 
         List<String> titles = getSections();
         String[] sections = new String[titles.size()];
         sections = titles.toArray(sections);
-        if (titles.indexOf(callbackQuery) >=0) {
+        String[] button = {"Далее"};
+        if (titles.contains(callbackQuery)) {
             telegramApiController.sendText(chatId,"выбран раздел обучения '"+callbackQuery+"'");
+            telegramApiController.sendButton(chatId, button);
         }
         if ("Настройки".equals(callbackQuery)) {
             String[][] buttons = new String[][] {

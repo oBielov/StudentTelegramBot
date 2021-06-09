@@ -19,6 +19,18 @@ import java.util.stream.Collectors;
 public class TelegramApiController extends TelegramLongPollingBot {
     private static Properties appProperties;
     private static final String PROPERTIES_FILEPATH = "/application.properties";
+    private static TelegramApiController service;
+
+    private TelegramApiController(){};
+
+    public static TelegramApiController getInstance(){
+        if(service == null){
+            synchronized (TelegramApiController.class){
+                if(service == null) service = new TelegramApiController();
+            }
+        }
+        return service;
+    }
 
     @SneakyThrows
     @Override
@@ -60,6 +72,14 @@ public class TelegramApiController extends TelegramLongPollingBot {
         sendMessageRequest.setReplyMarkup(createKeyboard(buttons));
         sendApiMethod(sendMessageRequest);
     }
+    @SneakyThrows
+    public void sendButton(Long chatId, String[] buttons){
+        SendMessage sendMessageRequest = new SendMessage();
+        sendMessageRequest.setChatId(chatId.toString());
+        sendMessageRequest.setReplyMarkup(createKeyboard(buttons));
+        sendApiMethod(sendMessageRequest);
+    }
+
 
     /**
      * create menu with buttons (under the text-box) for the telegram user

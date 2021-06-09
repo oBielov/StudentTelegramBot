@@ -11,10 +11,10 @@ import java.security.GeneralSecurityException;
 public class Main {
 
     public static void main(String[] args) throws TelegramApiException, GeneralSecurityException, IOException {
-        UserNotificationTimer.run(20, 33);
+        //UserNotificationTimer.run(20, 33);
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-        telegramBotsApi.registerBot(new TelegramApiController());
-        Sheets googleService = GoogleApiConfig.service();
+        telegramBotsApi.registerBot(TelegramApiController.getInstance());
+
     }
 
 }
