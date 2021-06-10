@@ -31,14 +31,22 @@ public class TelegramApiController extends TelegramLongPollingBot {
     }
 
     /**
+     * send a messages to the telegram user
+     * @param sendMessageRequest, SendMessage -  new message
+     */
+    @SneakyThrows
+    public void sendMessage(SendMessage sendMessageRequest) {
+        sendApiMethod(sendMessageRequest);
+    }
+
+    /**
      * send a text to the telegram user
      * @param chatId Long, ID current chat in telegram
      * @param text String, message, which wrote to the telegram user
      */
     @SneakyThrows
     public void sendText(Long chatId, String text){
-        TextMessage textMessage = new TextMessage();
-        sendApiMethod(textMessage.message(chatId, text));
+        new SendText().sendText(chatId, text);
     }
 
     /**
@@ -49,12 +57,7 @@ public class TelegramApiController extends TelegramLongPollingBot {
      */
     @SneakyThrows
     public void sendButton(Long chatId, String text, List<String> buttons){
-        SendMessage sendMessageRequest = new SendMessage();
-        sendMessageRequest.enableMarkdown(true);
-        sendMessageRequest.setChatId(chatId.toString());
-        sendMessageRequest.setText(text);
-        sendMessageRequest.setReplyMarkup(createKeyboard(buttons));
-        sendApiMethod(sendMessageRequest);
+        new SendButton().sendButton(chatId, text, buttons);
     }
 
     /**
@@ -65,47 +68,7 @@ public class TelegramApiController extends TelegramLongPollingBot {
      */
     @SneakyThrows
     public void sendMenuButton(Long chatId, String text, String[][] buttons){
-        SendMessage sendMessageRequest = new SendMessage();
-        sendMessageRequest.setChatId(chatId.toString());
-        sendMessageRequest.setText(text);
-        sendMessageRequest.setReplyMarkup(createMenuKeyboard(buttons));
-        sendApiMethod(sendMessageRequest);
-    }
-
-    /**
-     * create buttons (under the text-box) for method sendButton
-     * @return ReplyKeyboard - collection of buttons
-     * @param buttons List of String with button's names
-     */
-    private ReplyKeyboard createKeyboard(List <String> buttons){
-        InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
-        List<InlineKeyboardButton> listButtons = buttons
-                .stream()
-                .map(p -> InlineKeyboardButton.builder().text(p).callbackData(p).build())
-                .collect(Collectors.toList());
-        keyboard.setKeyboard(Collections.singletonList(listButtons));
-        return keyboard;
-    }
-
-    /**
-     * create buttons for method sendMenuButton
-     * @return ReplyKeyboard - collection of buttons
-     * @param buttons array of array of buttons
-     * */
-    private ReplyKeyboard createMenuKeyboard(String[][] buttons){
-        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
-        replyKeyboardMarkup.setSelective(true);
-        replyKeyboardMarkup.setResizeKeyboard(true);
-        replyKeyboardMarkup.setOneTimeKeyboard(true);
-        List<KeyboardRow> keyboard = new ArrayList<>();
-        for (String[] button : buttons) {
-            List<String> list = Arrays.stream(button).collect(Collectors.toList());
-            KeyboardRow keyboardRow = new KeyboardRow();
-            keyboardRow.addAll(list);
-            keyboard.add(keyboardRow);
-        }
-        replyKeyboardMarkup.setKeyboard(keyboard);
-        return replyKeyboardMarkup;
+        new SendMenuButton().sendMenuButton(chatId, text, buttons);
     }
 
 
