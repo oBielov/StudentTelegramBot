@@ -50,10 +50,10 @@ public class TelegramApiController extends TelegramLongPollingBot {
      * create buttons inline  for the telegram user
      * @param chatId Long, ID current chat in telegram
      * @param text String, message, which wrote to the telegram user
-     * @param buttons array of buttons
+     * @param buttons List of String with button's names
      */
     @SneakyThrows
-    public void sendButton(Long chatId, String text, String[] buttons){
+    public void sendButton(Long chatId, String text, List<String> buttons){
         SendMessage sendMessageRequest = new SendMessage();
         sendMessageRequest.setChatId(chatId.toString());
         sendMessageRequest.setText(text);
@@ -79,11 +79,12 @@ public class TelegramApiController extends TelegramLongPollingBot {
     /**
      * create buttons (under the text-box) for method sendButton
      * @return ReplyKeyboard - collection of buttons
-     * @param buttons array of buttons
+     * @param buttons List of String with button's names
      */
-    private ReplyKeyboard createKeyboard(String[] buttons){
+    private ReplyKeyboard createKeyboard(List <String> buttons){
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
-        List<InlineKeyboardButton> listButtons = Arrays.stream(buttons)
+        List<InlineKeyboardButton> listButtons = buttons
+                .stream()
                 .map(p -> InlineKeyboardButton.builder().text(p).callbackData(p).build())
                 .collect(Collectors.toList());
         keyboard.setKeyboard(Collections.singletonList(listButtons));

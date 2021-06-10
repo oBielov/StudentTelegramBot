@@ -9,8 +9,7 @@ public class UserInactivityTimer {
     private static Map<Long, Timer> timerMap = new HashMap<>();
     private static final TelegramApiController inactivityTelegramApiController = new TelegramApiController();
 
-    private UserInactivityTimer() {
-    }
+    private UserInactivityTimer(){};
 
 
     //нужно использовать этот метод при любой активности User и его создании
@@ -22,7 +21,10 @@ public class UserInactivityTimer {
         timerMap.get(chatId).schedule(new TimerTask() {
             @Override
             public void run() {
-                inactivityTelegramApiController.sendButton(chatId, "Продолжаем?", new String[]{"Да", "Нет"});
+                ArrayList<String> listButtons = new ArrayList<>();
+                listButtons.add("Да");
+                listButtons.add("Нет");
+                inactivityTelegramApiController.sendButton(chatId,"Продолжаем?", listButtons);
             }
         }, 30 * 1000, 30 * 1000);//нужно поменять на время в задании 20 мин.
     }
