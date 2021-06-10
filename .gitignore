@@ -3,4 +3,9 @@
 /workspace.xml
 /target
 *.xml
-.idea
+.idea/
+*.iml
+application.properties
+credentials.json
+.gitignore
+pom.xml
