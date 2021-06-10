@@ -1,9 +1,6 @@
 package com.goit.telegrambot;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 public class UserInactivityTimer {
     private static Map<Long, Timer> timerMap = new HashMap<>();
