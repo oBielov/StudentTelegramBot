@@ -40,7 +40,7 @@ public class UserService {
     private void handleMessageUpdate(Update update) {
         Long chatId = update.getMessage().getChatId();
         String messageText = update.getMessage().getText();
-        //UserInactivityTimer.updateUserCheckInactivity(chatId);
+        UserInactivityTimer.updateUserCheckInactivity(chatId);
 
         if ("/start".equals(messageText)){
             if (!UserList.isUserExist(chatId)){
@@ -75,7 +75,7 @@ public class UserService {
     private void handleCallbackQueryUpdate(Update update){
         Long chatId = update.getCallbackQuery().getFrom().getId();
         String callbackQuery = update.getCallbackQuery().getData();
-        //UserInactivityTimer.updateUserCheckInactivity(chatId);
+        UserInactivityTimer.updateUserCheckInactivity(chatId);
 
         List<String> titles = getSections();
         if (titles.contains(callbackQuery)) {
@@ -105,6 +105,12 @@ public class UserService {
             sendButton.sendButton(chatId, Continue.sendText(user.getCurrentQuestion(),
                     currentBlock), Buttons.nextButton());
             user.setCurrentQuestion(currentQuestion + 1);
+        }
+        if ("Да".equals(callbackQuery)){
+            UserInactivityTimer.continueUserCheckInactivity(chatId);
+        }
+        if ("Нет".equals(callbackQuery)){
+            UserInactivityTimer.stopUserCheckInactivity(chatId);
         }
     }
 
