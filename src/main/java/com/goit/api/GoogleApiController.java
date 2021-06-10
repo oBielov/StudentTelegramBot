@@ -1,4 +1,4 @@
-package com.goit.telegrambot;
+package com.goit.api;
 
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpRequestInitializer;
@@ -23,14 +23,30 @@ import java.util.Properties;
  * of Sheets class.
  * @see Sheets
  */
-public class GoogleApiConfig {
+public class GoogleApiController {
 
     //main fields
     private static final String CREDENTIALS_FILEPATH = "/credentials.json"; //credentials from Google Cloud Console
-    private static final String PROPERTIES_FILEPATH = "/application.properties"; //properties with sheets ID
-    private static Properties appProperties;
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance(); //JsonFactory for Sheets.Builder
     private static final String APP_NAME = "Student Telegram Bot"; //custom application name
+    private static GoogleApiController instance;
+
+    private GoogleApiController(){}
+
+    /**
+     * Singletone init of class. Lazy init with Double check blocking, to avoid overhead problem.
+     * @return GoogleApiConfig instance
+     */
+    public static GoogleApiController getInstance(){
+        if (instance == null){
+            synchronized (GoogleApiController.class){
+                if (instance == null){
+                    instance = new GoogleApiController();
+                }
+            }
+        }
+        return instance;
+    }
 
 
     /**
@@ -40,7 +56,7 @@ public class GoogleApiConfig {
      */
     private static HttpRequestInitializer authorize() throws IOException {
 
-        InputStream in = GoogleApiConfig.class.getResourceAsStream(CREDENTIALS_FILEPATH);
+        InputStream in = GoogleApiController.class.getResourceAsStream(CREDENTIALS_FILEPATH);
         if (in == null){
             throw new FileNotFoundException("No such resource: " + CREDENTIALS_FILEPATH);
         }
@@ -58,20 +74,6 @@ public class GoogleApiConfig {
      * @throws IOException if there is no application.property file
      * @see Properties
      */
-    public static Properties getProperties() throws IOException {
-
-        if (appProperties != null){
-            return appProperties;
-        }
-
-        InputStream in = GoogleApiConfig.class.getResourceAsStream(PROPERTIES_FILEPATH);
-        if (in == null){
-            throw new FileNotFoundException("No such resource: " + PROPERTIES_FILEPATH);
-        }
-        appProperties = new Properties();
-        appProperties.load(in);
-        return appProperties;
-    }
 
     /**
      * Main service method. Returns an instance of Sheets class to access all of Google Spreadsheet API methods.

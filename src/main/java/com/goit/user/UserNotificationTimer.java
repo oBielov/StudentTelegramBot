@@ -1,4 +1,4 @@
-package com.goit.telegrambot;
+package com.goit.user;
 
 import lombok.SneakyThrows;
 import java.nio.file.Files;
