@@ -1,17 +1,19 @@
 package com.goit.telegrambot;
-
+import com.goit.user.UserList;
 import lombok.SneakyThrows;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+
+
 
 public class UpdateDataBaseTimer {
     public static void updateDataBase(){
         new RunUpdate().start();
     }
     static class RunUpdate extends Thread{
-        int hours = 4; // Set hours to upgrade.
-        int minutes = 3; // Set minutes to upgrade..
+        int hours = 0; // Set hours to upgrade.
+        int minutes = 0; // Set minutes to upgrade..
         @SneakyThrows
         @Override
         public void run() {
