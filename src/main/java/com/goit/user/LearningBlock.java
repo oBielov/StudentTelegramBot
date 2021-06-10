@@ -1,6 +1,6 @@
 package com.goit.user;
 
-import com.goit.api.GoogleApiConfig;
+import com.goit.api.GoogleApiController;
 import com.goit.telegrambot.AppProperties;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import lombok.Data;
@@ -34,7 +34,7 @@ public class LearningBlock {
     @SneakyThrows
     private List<List<Object>> receiveQuestions(){
         String cells = AppProperties.getProperties().getProperty("cells_range");
-        ValueRange response = GoogleApiConfig.service().spreadsheets().values()
+        ValueRange response = GoogleApiController.service().spreadsheets().values()
                 .get(sheetId, groupId + cells)
                 .execute();
         return response.getValues();

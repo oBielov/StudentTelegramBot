@@ -9,13 +9,13 @@ public class Continue {
         Question current = block.getQuestion(question_id);
 
         StringBuilder builder = new StringBuilder();
-        builder.append("<b>Вопрос:</b> \n")
+        builder.append("*Вопрос:* \n")
                 .append(current.getQuestion())
                 .append("\n\n")
-                .append("<b>Ответ:</b> \n")
+                .append("*Ответ:* \n")
                 .append(current.getAnswer())
                 .append("\n\n")
-                .append("<b>Видео по теме:</b> \n")
+                .append("*Видео по теме:* \n")
                 .append(current.getUrl());
         return builder.toString();
 

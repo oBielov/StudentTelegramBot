@@ -1,5 +1,6 @@
 package com.goit.api;
 
+import com.goit.messages.TextMessage;
 import com.goit.telegrambot.UserService;
 import lombok.SneakyThrows;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -36,10 +37,8 @@ public class TelegramApiController extends TelegramLongPollingBot {
      */
     @SneakyThrows
     public void sendText(Long chatId, String text){
-        SendMessage sendMessageRequest = new SendMessage();
-        sendMessageRequest.setChatId(chatId.toString());
-        sendMessageRequest.setText(text);
-        sendApiMethod(sendMessageRequest);
+        TextMessage textMessage = new TextMessage();
+        sendApiMethod(textMessage.message(chatId, text));
     }
 
     /**
@@ -51,6 +50,7 @@ public class TelegramApiController extends TelegramLongPollingBot {
     @SneakyThrows
     public void sendButton(Long chatId, String text, List<String> buttons){
         SendMessage sendMessageRequest = new SendMessage();
+        sendMessageRequest.enableMarkdown(true);
         sendMessageRequest.setChatId(chatId.toString());
         sendMessageRequest.setText(text);
         sendMessageRequest.setReplyMarkup(createKeyboard(buttons));

@@ -13,6 +13,7 @@ public class User {
     private String nickname;
     private String email;
     private String groupName;
+    private String courseName;
     private int currentQuestion;
     private LearningBlock learningBlock = new LearningBlock();
 

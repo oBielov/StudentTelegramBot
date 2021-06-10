@@ -23,25 +23,25 @@ import java.util.Properties;
  * of Sheets class.
  * @see Sheets
  */
-public class GoogleApiConfig {
+public class GoogleApiController {
 
     //main fields
     private static final String CREDENTIALS_FILEPATH = "/credentials.json"; //credentials from Google Cloud Console
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance(); //JsonFactory for Sheets.Builder
     private static final String APP_NAME = "Student Telegram Bot"; //custom application name
-    private static GoogleApiConfig instance;
+    private static GoogleApiController instance;
 
-    private GoogleApiConfig(){}
+    private GoogleApiController(){}
 
     /**
      * Singletone init of class. Lazy init with Double check blocking, to avoid overhead problem.
      * @return GoogleApiConfig instance
      */
-    public static GoogleApiConfig getInstance(){
+    public static GoogleApiController getInstance(){
         if (instance == null){
-            synchronized (GoogleApiConfig.class){
+            synchronized (GoogleApiController.class){
                 if (instance == null){
-                    instance = new GoogleApiConfig();
+                    instance = new GoogleApiController();
                 }
             }
         }
@@ -56,7 +56,7 @@ public class GoogleApiConfig {
      */
     private static HttpRequestInitializer authorize() throws IOException {
 
-        InputStream in = GoogleApiConfig.class.getResourceAsStream(CREDENTIALS_FILEPATH);
+        InputStream in = GoogleApiController.class.getResourceAsStream(CREDENTIALS_FILEPATH);
         if (in == null){
             throw new FileNotFoundException("No such resource: " + CREDENTIALS_FILEPATH);
         }
