@@ -6,7 +6,7 @@ import java.util.*;
 
 public class UserInactivityTimer {
     private static final Map<Long, Timer> timerMap = new HashMap<>();
-    private static final TelegramApiController inactivityTelegramApiController = TelegramApiController.getInstance();
+    private static final TelegramApiController inactivityTelegramApiController = new TelegramApiController();
 
     private UserInactivityTimer(){};
 

@@ -1,6 +1,8 @@
 package com.goit.telegrambot;
 
+import com.goit.api.GoogleApiConfig;
 import com.goit.messages.Messages;
+import com.goit.user.UserList;
 import com.google.api.services.sheets.v4.model.Sheet;
 import com.google.api.services.sheets.v4.model.SheetProperties;
 import com.google.api.services.sheets.v4.model.Spreadsheet;
@@ -8,6 +10,7 @@ import lombok.SneakyThrows;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import com.goit.api.TelegramApiController;
+import com.goit.user.UserInactivityTimer;
 
 import java.util.*;
 
@@ -15,8 +18,7 @@ public class UserService {
     private Update update;
     private String eMail;
     private String groupNumber;
-    private String[] sections;
-    private static final TelegramApiController telegramApiController = TelegramApiController.getInstance();
+    private static final TelegramApiController telegramApiController = new TelegramApiController();
 
     public UserService(Update update) {
         this.update = update;
@@ -46,14 +48,14 @@ public class UserService {
                 UserList.addEmail(chatId, messageText);
                 eMail = UserList.getEmail(chatId);
             }
-            else { telegramApiController.sendMessage(chatId, Messages.askEmail()); }
+            else { telegramApiController.sendText(chatId, Messages.askEmail()); }
         }
         if(!eMail.isBlank() && groupNumber.isBlank()) {
             if (groupNumber.isBlank() & !messageText.equals(eMail)) {
                 UserList.addGroupNumber(chatId, messageText);
                 groupNumber = UserList.getGroupNumber(chatId);
             }
-            else telegramApiController.sendMessage(chatId, Messages.group());
+            else telegramApiController.sendText(chatId, Messages.group());
         }
         if (UserList.isUserExist(chatId) && !eMail.isBlank() && !groupNumber.isBlank()
         && UserList.getCurrentQuestion(chatId)==0) {
@@ -70,8 +72,8 @@ public class UserService {
         UserInactivityTimer.updateUserCheckInactivity(chatId);
 
         List<String> titles = getSections();
-        if (titles.indexOf(callbackQuery) >=0) {
-            telegramApiController.sendMessage(chatId,"выбран раздел обучения '"+callbackQuery+"'");
+        if (titles.contains(callbackQuery)) {
+            telegramApiController.sendText(chatId,"выбран раздел обучения '"+callbackQuery+"'");
         }
         if ("Настройки".equals(callbackQuery)) {
             String[][] buttons = new String[][] {

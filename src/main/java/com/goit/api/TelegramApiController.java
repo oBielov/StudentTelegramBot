@@ -11,7 +11,6 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,20 +20,6 @@ import java.util.stream.Collectors;
 public class TelegramApiController extends TelegramLongPollingBot {
     private static Properties appProperties;
     private static final String PROPERTIES_FILEPATH = "/application.properties";
-    private static TelegramApiController service;
-
-
-
-    private TelegramApiController(){}
-
-    public static TelegramApiController getInstance(){
-        if(service == null){
-            synchronized (TelegramApiController.class){
-                if(service == null) service = new TelegramApiController();
-            }
-        }
-        return service;
-    }
 
     @SneakyThrows
     @Override
@@ -46,7 +31,7 @@ public class TelegramApiController extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        new UserService(update);
+        new UserService(update).analiseMessage();
     }
 
     /**
@@ -55,7 +40,7 @@ public class TelegramApiController extends TelegramLongPollingBot {
      * @param text String, message, which wrote to the telegram user
      */
     @SneakyThrows
-    public void sendMessage(Long chatId, String text){
+    public void sendText(Long chatId, String text){
         SendMessage sendMessageRequest = new SendMessage();
         sendMessageRequest.setChatId(chatId.toString());
         sendMessageRequest.setText(text);
@@ -118,8 +103,8 @@ public class TelegramApiController extends TelegramLongPollingBot {
         replyKeyboardMarkup.setResizeKeyboard(true);
         replyKeyboardMarkup.setOneTimeKeyboard(true);
         List<KeyboardRow> keyboard = new ArrayList<>();
-        for (String[] button : buttons) {
-            List<String> list = Arrays.stream(button).collect(Collectors.toList());
+        for (int i = 0; i < buttons.length; i++){
+            List<String> list = Arrays.stream(buttons[i]).collect(Collectors.toList());
             KeyboardRow keyboardRow = new KeyboardRow();
             keyboardRow.addAll(list);
             keyboard.add(keyboardRow);

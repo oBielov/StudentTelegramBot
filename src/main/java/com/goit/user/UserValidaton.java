@@ -5,7 +5,7 @@ import org.apache.commons.validator.routines.EmailValidator;
 
 public class UserValidaton {
 
-    private static final TelegramApiController service = TelegramApiController.getInstance();
+    private static final TelegramApiController service = new TelegramApiController();
 
     private static String valid(long chatId, String email){
         if(EmailValidator.getInstance().isValid(email)){

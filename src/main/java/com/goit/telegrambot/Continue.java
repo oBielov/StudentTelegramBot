@@ -1,4 +1,6 @@
 package com.goit.telegrambot;
+import com.goit.user.LearningBlock;
+import com.goit.user.Question;
 
 
 public class Continue {
