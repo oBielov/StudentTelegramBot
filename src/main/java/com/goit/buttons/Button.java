@@ -2,6 +2,7 @@ package com.goit.buttons;
 
 public interface Button {
 
-    public void execute();
+    public void sendText();
+    public void sendQuery();
 
 }
