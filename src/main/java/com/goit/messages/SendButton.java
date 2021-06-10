@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class SendButton {
-
+    private static final TelegramApiController telegramApiController = new TelegramApiController();
     /**
      * create buttons inline  for the telegram user
      * @param chatId Long, ID current chat in telegram
@@ -25,7 +25,7 @@ public class SendButton {
         sendMessageRequest.setChatId(chatId.toString());
         sendMessageRequest.setText(text);
         sendMessageRequest.setReplyMarkup(createKeyboard(buttons));
-        new TelegramApiController().sendMessage(sendMessageRequest);
+        telegramApiController.sendMessage(sendMessageRequest);
     }
 
     /**

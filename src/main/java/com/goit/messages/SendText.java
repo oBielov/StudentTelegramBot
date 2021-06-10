@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 public class SendText {
+    private static final TelegramApiController telegramApiController = new TelegramApiController();
     /**
      * send a text to the telegram user
      * @param chatId Long, ID current chat in telegram
@@ -15,6 +16,6 @@ public class SendText {
         SendMessage sendMessageRequest = new SendMessage();
         sendMessageRequest.setChatId(chatId.toString());
         sendMessageRequest.setText(text);
-        new TelegramApiController().sendMessage(sendMessageRequest);
+        telegramApiController.sendMessage(sendMessageRequest);
     }
 }

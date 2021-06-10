@@ -36,15 +36,15 @@ public class TelegramApiController extends TelegramLongPollingBot {
         sendApiMethod(sendMessageRequest);
     }
 
-    /**
-     * send a text to the telegram user
-     * @param chatId Long, ID current chat in telegram
-     * @param text String, message, which wrote to the telegram user
-     */
-    @SneakyThrows
-    public void sendText(Long chatId, String text){
-        new SendText().sendText(chatId, text);
-    }
+//    /**
+//     * send a text to the telegram user
+//     * @param chatId Long, ID current chat in telegram
+//     * @param text String, message, which wrote to the telegram user
+//     */
+//    @SneakyThrows
+//    public void sendText(Long chatId, String text){
+//        new SendText().sendText(chatId, text);
+//    }
 
     /**
      * create buttons inline  for the telegram user
@@ -57,16 +57,16 @@ public class TelegramApiController extends TelegramLongPollingBot {
         new SendButton().sendButton(chatId, text, buttons);
     }
 
-    /**
-     * create menu with buttons (under the text-box) for the telegram user
-     * @param chatId Long, ID current chat in telegram
-     * @param text String, message, which wrote to the telegram user
-     * @param buttons array of array of buttons
-     */
-    @SneakyThrows
-    public void sendMenuButton(Long chatId, String text, String[][] buttons){
-        new SendMenuButton().sendMenuButton(chatId, text, buttons);
-    }
+//    /**
+//     * create menu with buttons (under the text-box) for the telegram user
+//     * @param chatId Long, ID current chat in telegram
+//     * @param text String, message, which wrote to the telegram user
+//     * @param buttons array of array of buttons
+//     */
+//    @SneakyThrows
+//    public void sendMenuButton(Long chatId, String text, String[][] buttons){
+//        new SendMenuButton().sendMenuButton(chatId, text, buttons);
+//    }
 
 
 }
