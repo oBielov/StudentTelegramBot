@@ -1,5 +1,6 @@
-package com.goit.telegrambot;
+package com.goit.messages;
 
+import com.goit.api.TelegramApiController;
 import lombok.SneakyThrows;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;

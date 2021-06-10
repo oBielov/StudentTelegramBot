@@ -1,19 +1,16 @@
 package com.goit.api;
 
+import com.goit.messages.SendButton;
+import com.goit.messages.SendMenuButton;
+import com.goit.messages.SendText;
 import com.goit.messages.TextMessage;
 import com.goit.telegrambot.UserService;
 import lombok.SneakyThrows;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import com.goit.telegrambot.AppProperties;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class TelegramApiController extends TelegramLongPollingBot {
 
