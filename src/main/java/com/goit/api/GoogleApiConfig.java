@@ -27,8 +27,6 @@ public class GoogleApiConfig {
 
     //main fields
     private static final String CREDENTIALS_FILEPATH = "/credentials.json"; //credentials from Google Cloud Console
-    private static final String PROPERTIES_FILEPATH = "/application.properties"; //properties with sheets ID
-    private static Properties appProperties;
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance(); //JsonFactory for Sheets.Builder
     private static final String APP_NAME = "Student Telegram Bot"; //custom application name
     private static GoogleApiConfig instance;
@@ -76,20 +74,6 @@ public class GoogleApiConfig {
      * @throws IOException if there is no application.property file
      * @see Properties
      */
-    public static Properties getProperties() throws IOException {
-
-        if (appProperties != null){
-            return appProperties;
-        }
-
-        InputStream in = GoogleApiConfig.class.getResourceAsStream(PROPERTIES_FILEPATH);
-        if (in == null){
-            throw new FileNotFoundException("No such resource: " + PROPERTIES_FILEPATH);
-        }
-        appProperties = new Properties();
-        appProperties.load(in);
-        return appProperties;
-    }
 
     /**
      * Main service method. Returns an instance of Sheets class to access all of Google Spreadsheet API methods.

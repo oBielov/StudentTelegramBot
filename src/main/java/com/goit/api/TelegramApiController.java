@@ -10,24 +10,19 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import com.goit.telegrambot.AppProperties;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class TelegramApiController extends TelegramLongPollingBot {
-    private static Properties appProperties;
-    private static final String PROPERTIES_FILEPATH = "/application.properties";
 
     @SneakyThrows
     @Override
-    public String getBotUsername() {return getProperties().getProperty("telegram_bot_name");}
+    public String getBotUsername() {return AppProperties.getProperties().getProperty("telegram_bot_name");}
 
     @SneakyThrows
     @Override
-    public String getBotToken() {return getProperties().getProperty("telegram_bot_token");}
+    public String getBotToken() {return AppProperties.getProperties().getProperty("telegram_bot_token");}
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -103,8 +98,8 @@ public class TelegramApiController extends TelegramLongPollingBot {
         replyKeyboardMarkup.setResizeKeyboard(true);
         replyKeyboardMarkup.setOneTimeKeyboard(true);
         List<KeyboardRow> keyboard = new ArrayList<>();
-        for (int i = 0; i < buttons.length; i++){
-            List<String> list = Arrays.stream(buttons[i]).collect(Collectors.toList());
+        for (String[] button : buttons) {
+            List<String> list = Arrays.stream(button).collect(Collectors.toList());
             KeyboardRow keyboardRow = new KeyboardRow();
             keyboardRow.addAll(list);
             keyboard.add(keyboardRow);
@@ -113,23 +108,5 @@ public class TelegramApiController extends TelegramLongPollingBot {
         return replyKeyboardMarkup;
     }
 
-    /**
-     * Properties class that returns properties from /application.properties. User can access property by
-     * getProperties().getProperty() method.
-     * @return Properties
-     * @throws IOException if there is no application.property file
-     * @see Properties
-     */
-    private static Properties getProperties() throws IOException {
-        if (appProperties != null){
-            return appProperties;
-        }
-        InputStream in = TelegramApiController.class.getResourceAsStream(PROPERTIES_FILEPATH);
-        if (in == null){
-            throw new FileNotFoundException("No such resource: " + PROPERTIES_FILEPATH);
-        }
-        appProperties = new Properties();
-        appProperties.load(in);
-        return appProperties;
-    }
+
 }

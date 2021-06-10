@@ -87,7 +87,7 @@ public class UserService {
 
     @SneakyThrows
     private List<String> getSections() {
-        Properties properties = GoogleApiConfig.getProperties();
+        Properties properties = AppProperties.getProperties();
         String spreadSheetID = properties.getProperty("spreadsheet_id");
         Spreadsheet spreadsheetMetadata = GoogleApiConfig.service().spreadsheets().get(spreadSheetID).execute();
         List<Sheet> sheets = spreadsheetMetadata.getSheets();
