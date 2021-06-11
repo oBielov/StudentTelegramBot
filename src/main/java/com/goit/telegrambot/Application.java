@@ -1,30 +1,26 @@
 package com.goit.telegrambot;
 
-import com.goit.api.GoogleApiController;
 import com.goit.buttons.Buttons;
-import com.goit.messages.Continue;
-import com.goit.messages.Messages;
 import com.goit.buttons.SendButton;
 import com.goit.buttons.SendMenuButton;
 import com.goit.buttons.SendText;
+import com.goit.messages.Continue;
+import com.goit.messages.Messages;
 import com.goit.user.*;
-import com.google.api.services.sheets.v4.model.Sheet;
-import com.google.api.services.sheets.v4.model.SheetProperties;
-import com.google.api.services.sheets.v4.model.Spreadsheet;
 import lombok.SneakyThrows;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import java.util.*;
+import java.util.List;
 
-public class UserService {
+public class Application {
     private final Update update;
     private static final SendText sendText = new SendText();
     private static final SendButton sendButton = new SendButton();
     private static final SendMenuButton sendMenuButton = new SendMenuButton();
 
 
-    public UserService(Update update) {
+    public Application(Update update) {
         this.update = update;
     }
 
