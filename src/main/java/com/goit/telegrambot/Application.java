@@ -2,7 +2,6 @@ package com.goit.telegrambot;
 
 import com.goit.buttons.Buttons;
 import com.goit.buttons.SendButton;
-import com.goit.buttons.SendMenuButton;
 import com.goit.buttons.SendText;
 import com.goit.messages.Continue;
 import com.goit.messages.Messages;
@@ -14,11 +13,11 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import java.util.List;
 
 public class Application {
+
+
     private final Update update;
     private static final SendText sendText = new SendText();
     private static final SendButton sendButton = new SendButton();
-    private static final SendMenuButton sendMenuButton = new SendMenuButton();
-
 
     public Application(Update update) {
         this.update = update;
@@ -92,6 +91,7 @@ public class Application {
             int currentQuestion = user.getCurrentQuestion();
             if(currentQuestion == currentBlock.getQuestions().size()){
                 sendButton.sendButton(chatId, Messages.endOfBlock(), titles);
+                user.setCurrentQuestion(0);
             }
             sendButton.sendButton(chatId, Continue.sendText(user.getCurrentQuestion(),
                     currentBlock), Buttons.nextButton());
