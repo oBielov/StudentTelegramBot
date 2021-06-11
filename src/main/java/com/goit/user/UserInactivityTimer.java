@@ -30,12 +30,12 @@ public class UserInactivityTimer {
     //реакция на кнопку таймера неактивности "НЕТ"
     public static void stopUserCheckInactivity(Long chatId) {
         timerMap.get(chatId).cancel();
-        inactivityTelegramApiController.sendText(chatId, "Жаль!\nКогда будешь готов жми кнопку /</b>\"ДАЛЕЕ\"</b> вверху)))");
+        inactivityTelegramApiController.sendText(chatId, "Жаль!\nКогда будешь готов жми кнопку /<b>\"ДАЛЕЕ\"</b> вверху)))");
     }
 
     //реакция на кнопку таймера неактивности "ДА"
     public static void continueUserCheckInactivity(Long chatId) {
-        inactivityTelegramApiController.sendText(chatId, "Супер!\nТогда продолжаем, жми кнопку </b>\"ДАЛЕЕ\"</b> вверху)))");
+        inactivityTelegramApiController.sendText(chatId, "Супер!\nТогда продолжаем, жми кнопку <b>\"ДАЛЕЕ\"</b> вверху)))");
         updateUserCheckInactivity(chatId);
     }
 }
