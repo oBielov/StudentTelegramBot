@@ -1,14 +1,19 @@
 package com.goit.user;
 
 import com.goit.api.TelegramApiController;
+import com.goit.buttons.SendButton;
+import com.goit.buttons.SendText;
+import com.goit.messages.Messages;
 
 import java.util.*;
 
 public class UserInactivityTimer {
     private static final Map<Long, Timer> timerMap = new HashMap<>();
-    private static final TelegramApiController inactivityTelegramApiController = new TelegramApiController();
+    private static final TelegramApiController service = new TelegramApiController();
+    private static final SendText sendText = new SendText();
+    private static final SendButton sendButton = new SendButton();
 
-    private UserInactivityTimer(){};
+    private UserInactivityTimer(){}
 
 
     //нужно использовать этот метод при любой активности User и его создании
@@ -23,8 +28,19 @@ public class UserInactivityTimer {
                 ArrayList<String> listButtons = new ArrayList<>();
                 listButtons.add("Да");
                 listButtons.add("Нет");
-                inactivityTelegramApiController.sendButton(chatId,"Продолжаем?", listButtons);
+                sendButton.sendButton(chatId,"Продолжаем?", listButtons);
             }
-        }, 30 * 1000, 30 * 1000);//нужно поменять на время в задании 20 мин.
+        },20*60*1000, 20*60*1000);//нужно поменять на время в задании 20 мин.
+    }
+    //реакция на кнопку таймера неактивности "НЕТ"
+    public static void stopUserCheckInactivity(Long chatId) {
+        timerMap.get(chatId).cancel();
+        sendText.sendText(chatId, Messages.stopCheckInactivity());
+    }
+
+    //реакция на кнопку таймера неактивности "ДА"
+    public static void continueUserCheckInactivity(Long chatId) {
+        sendText.sendText(chatId, Messages.continueCheckInactivity());
+        updateUserCheckInactivity(chatId);
     }
 }
