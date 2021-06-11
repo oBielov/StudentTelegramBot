@@ -1,4 +1,4 @@
-package com.goit.messages;
+package com.goit.telegrambot;
 import com.goit.user.LearningBlock;
 import com.goit.user.Question;
 
@@ -9,15 +9,16 @@ public class Continue {
         Question current = block.getQuestion(question_id);
 
         StringBuilder builder = new StringBuilder();
-        return builder.append("<b>Вопрос:</b> \n")
+        builder.append("*Вопрос:* \n")
                 .append(current.getQuestion())
                 .append("\n\n")
-                .append("<b>Ответ:</b> \n")
+                .append("*Ответ:* \n")
                 .append(current.getAnswer())
                 .append("\n\n")
-                .append("<b>Видео по теме:</b> \n")
-                .append(current.getUrl())
-                .toString();
+                .append("*Видео по теме:* \n")
+                .append(current.getUrl());
+        return builder.toString();
+
     }
 
 }

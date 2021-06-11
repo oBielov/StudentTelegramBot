@@ -8,7 +8,6 @@ public class Buttons {
     public static List<String> nextButton(){
         List<String> button = new ArrayList<>();
         button.add("Далее");
-        button.add("Настройки");
         return button;
     }
 
