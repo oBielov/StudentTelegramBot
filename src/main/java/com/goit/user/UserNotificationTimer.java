@@ -4,6 +4,7 @@ import com.goit.api.TelegramApiController;
 import com.goit.buttons.SendButton;
 import com.goit.buttons.SendMenuButton;
 import com.goit.buttons.SendText;
+import com.goit.messages.Messages;
 import lombok.SneakyThrows;
 
 import java.nio.file.Files;
@@ -34,7 +35,7 @@ public class UserNotificationTimer {
      * TimerTask returns a phrase at a given time once in 24 hours.
      */
     public static void sendMenuButton(Long chatId) {
-        sendMenuButton.sendMenuButton(chatId, "Выберите в нижнем меню время напоминания", buttons);
+        sendMenuButton.sendMenuButton(chatId, Messages.sendMenuButton(), buttons);
     }
 
     public static void checkMenuButtonClick(Long chatId, String messageText) {
@@ -45,7 +46,7 @@ public class UserNotificationTimer {
                 for (String timeOnMenuButton : button) {
                     if (timeOnMenuButton.equals(messageText)) {
                         run(Integer.parseInt(timeOnMenuButton.substring(0, 2)), 0);
-                        sendText.sendText(chatId, "Напоминание установленно на: " + timeOnMenuButton);
+                        sendText.sendText(chatId, Messages.clickMenuButton() + timeOnMenuButton);
                     }
                 }
             }
@@ -67,7 +68,7 @@ public class UserNotificationTimer {
      */
     public static void notificationOff(Long chatId) {
         timer.cancel();
-        sendText.sendText(chatId, "Вы отключили напоминание!\nЧтобы возобновить выберите время в меню.");
+        sendText.sendText(chatId, Messages.notificationOff());
     }
 
     /**

@@ -13,21 +13,21 @@ import java.util.Properties;
 
 public class Messages {
 
-    public static String askEmail(){
+    public static String askEmail() {
         return "Пожалуйста, введите корректный e-mail: ";
     }
 
-    public static String welcome(){
+    public static String welcome() {
         return "Приветствуем тебя студент, этот бот поможет тебе подготовиться" +
                 " к техническим собеседованиям по вебразработке.\n" +
                 "Но, прежде тебе нужно выбрать блок изучения";
     }
 
-    public static String group(){
+    public static String group() {
         return "Введите номер группы: ";
     }
 
-    public static String endOfBlock(){
+    public static String endOfBlock() {
         return "<b>Поздравляем! Вы закончили этот блок обучения.\nВы можете начать заново или выбрать другой блок  </b>";
     }
 
@@ -39,9 +39,27 @@ public class Messages {
         Spreadsheet spreadsheetMetadata = GoogleApiController.service().spreadsheets().get(spreadSheetID).execute();
         List<Sheet> sheets = spreadsheetMetadata.getSheets();
         List<String> titles = new ArrayList<>();
-        sheets.forEach(sheet -> titles.add(((SheetProperties)sheet.get("properties")).get("title").toString()));
+        sheets.forEach(sheet -> titles.add(((SheetProperties) sheet.get("properties")).get("title").toString()));
         return titles;
     }
 
+    public static String sendMenuButton() {
+        return "Выберите в нижнем меню время напоминания";
+    }
 
+    public static String clickMenuButton() {
+        return "Напоминание установленно на: ";
+    }
+
+    public static String notificationOff() {
+        return "Вы отключили напоминание!\nЧтобы возобновить выберите время в меню.";
+    }
+
+    public static String stopCheckInactivity() {
+        return "Жаль!\nКогда будешь готов жми кнопку <b>ДАЛЕЕ</b> вверху!";
+    }
+
+    public static String continueCheckInactivity() {
+        return "Супер!\nТогда продолжаем, жми кнопку <b>ДАЛЕЕ</b> вверху!";
+    }
 }

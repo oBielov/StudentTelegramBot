@@ -60,8 +60,10 @@ public class Application {
         if (UserList.isUserExist(chatId) && !eMail.isBlank() && !groupNumber.isBlank()
         && UserList.getCurrentQuestion(chatId)==0) {
             List<String> titles = Messages.blocks();
+            titles.add("Настройки");
             sendButton.sendButton(chatId, Messages.welcome(), titles);
         }
+        UserNotificationTimer.checkMenuButtonClick(chatId, messageText);
     }
 
     // Получить и обработать нажатие юзером КНОПКИ
