@@ -17,7 +17,7 @@ import java.util.*;
  * {@link #notificationTime(int, int)} service method to form a correct Date to use it in timer.schedule()
  */
 public class UserNotificationTimer {
-    private static String[][] buttons = new String[][]{
+    private static final String[][] buttons = new String[][]{
             {"08:00", "09:00", "10:00", "11:00"},
             {"12:00", "13:00", "14:00", "15:00"},
             {"16:00", "17:00", "18:00", "19:00"},
@@ -28,7 +28,6 @@ public class UserNotificationTimer {
     private static final String FILEPATH = "src/main/notification_phrases.txt"; //file with phrases to send
     private static final Timer timer = new Timer(); //main timer
     private static final SendText sendText = new SendText();
-    private static final SendButton sendButton = new SendButton();
     private static final SendMenuButton sendMenuButton = new SendMenuButton();
 
     /**

@@ -7,10 +7,7 @@ import com.goit.messages.Messages;
 import com.goit.buttons.SendButton;
 import com.goit.buttons.SendMenuButton;
 import com.goit.buttons.SendText;
-import com.goit.user.LearningBlock;
-import com.goit.user.User;
-import com.goit.user.UserInactivityTimer;
-import com.goit.user.UserList;
+import com.goit.user.*;
 import com.google.api.services.sheets.v4.model.Sheet;
 import com.google.api.services.sheets.v4.model.SheetProperties;
 import com.google.api.services.sheets.v4.model.Spreadsheet;
@@ -66,8 +63,7 @@ public class UserService {
         }
         if (UserList.isUserExist(chatId) && !eMail.isBlank() && !groupNumber.isBlank()
         && UserList.getCurrentQuestion(chatId)==0) {
-            List<String> titles = getSections();
-            titles.add("Настройки");
+            List<String> titles = Messages.blocks();
             sendButton.sendButton(chatId, Messages.welcome(), titles);
         }
     }
@@ -78,7 +74,7 @@ public class UserService {
         String callbackQuery = update.getCallbackQuery().getData();
         UserInactivityTimer.updateUserCheckInactivity(chatId);
 
-        List<String> titles = getSections();
+        List<String> titles = Messages.blocks();
         if (titles.contains(callbackQuery)) {
             sendText.sendText(chatId,"выбран раздел обучения '"+callbackQuery+"'");
             User user = UserList.getUser(chatId);
@@ -92,31 +88,26 @@ public class UserService {
             user.setCurrentQuestion(currentQuestion + 1);
         }
         if ("Настройки".equals(callbackQuery)) {
-            String[][] buttons = new String[][] {
-                {"08:00", "09:00", "10:00", "11:00"},
-                {"12:00", "13:00", "14:00", "15:00"},
-                {"16:00", "17:00", "18:00", "19:00"}
-            }; // Выводим под полем ввода меню настройки времени
-            sendMenuButton.sendMenuButton(chatId,"Выберите в нижнем меню время напоминания", buttons);
+            UserNotificationTimer.sendMenuButton(chatId);
         }
         if ("Далее".equals(callbackQuery)){
             User user = UserList.getUser(chatId);
             LearningBlock currentBlock = user.getLearningBlock();
             int currentQuestion = user.getCurrentQuestion();
+            if(currentQuestion == currentBlock.getQuestions().size()){
+                sendButton.sendButton(chatId, Messages.endOfBlock(), titles);
+            }
             sendButton.sendButton(chatId, Continue.sendText(user.getCurrentQuestion(),
                     currentBlock), Buttons.nextButton());
             user.setCurrentQuestion(currentQuestion + 1);
         }
+        if ("Да".equals(callbackQuery)){
+            UserInactivityTimer.continueUserCheckInactivity(chatId);
+        }
+        if ("Нет".equals(callbackQuery)){
+            UserInactivityTimer.stopUserCheckInactivity(chatId);
+        }
     }
 
-    @SneakyThrows
-    private List<String> getSections() {
-        Properties properties = AppProperties.getProperties();
-        String spreadSheetID = properties.getProperty("spreadsheet_id");
-        Spreadsheet spreadsheetMetadata = GoogleApiController.service().spreadsheets().get(spreadSheetID).execute();
-        List<Sheet> sheets = spreadsheetMetadata.getSheets();
-        List<String> titles = new ArrayList<>();
-        sheets.forEach(sheet -> titles.add(((SheetProperties)sheet.get("properties")).get("title").toString()));
-        return titles;
-    }
+
 }

@@ -14,6 +14,7 @@ public class SendText {
     @SneakyThrows
     public void sendText(Long chatId, String text){
         SendMessage sendMessageRequest = new SendMessage();
+        sendMessageRequest.enableHtml(true);
         sendMessageRequest.setChatId(chatId.toString());
         sendMessageRequest.setText(text);
         telegramApiController.sendMessage(sendMessageRequest);

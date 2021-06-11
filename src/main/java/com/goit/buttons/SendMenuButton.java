@@ -24,6 +24,7 @@ public class SendMenuButton {
     public void sendMenuButton(Long chatId, String text, String[][] buttons){
         SendMessage sendMessageRequest = new SendMessage();
         sendMessageRequest.setChatId(chatId.toString());
+        sendMessageRequest.enableHtml(true);
         sendMessageRequest.setText(text);
         sendMessageRequest.setReplyMarkup(createMenuKeyboard(buttons));
         telegramApiController.sendMessage(sendMessageRequest);
