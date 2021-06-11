@@ -1,4 +1,4 @@
-package com.goit.messages;
+package com.goit.buttons;
 
 import com.goit.api.TelegramApiController;
 import lombok.SneakyThrows;
@@ -23,7 +23,7 @@ public class SendButton {
     public void sendButton(Long chatId, String text, List<String> buttons){
         SendMessage sendMessageRequest = new SendMessage();
         sendMessageRequest.setChatId(chatId.toString());
-        sendMessageRequest.enableMarkdown(true);
+        sendMessageRequest.enableHtml(true);
         sendMessageRequest.setText(text);
         sendMessageRequest.setReplyMarkup(createKeyboard(buttons));
         telegramApiController.sendMessage(sendMessageRequest);

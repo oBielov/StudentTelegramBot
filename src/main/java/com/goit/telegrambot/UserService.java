@@ -2,10 +2,11 @@ package com.goit.telegrambot;
 
 import com.goit.api.GoogleApiController;
 import com.goit.buttons.Buttons;
+import com.goit.messages.Continue;
 import com.goit.messages.Messages;
-import com.goit.messages.SendButton;
-import com.goit.messages.SendMenuButton;
-import com.goit.messages.SendText;
+import com.goit.buttons.SendButton;
+import com.goit.buttons.SendMenuButton;
+import com.goit.buttons.SendText;
 import com.goit.user.LearningBlock;
 import com.goit.user.User;
 import com.goit.user.UserList;
@@ -15,15 +16,11 @@ import com.google.api.services.sheets.v4.model.Spreadsheet;
 import lombok.SneakyThrows;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import com.goit.api.TelegramApiController;
-import com.goit.user.UserInactivityTimer;
 
 import java.util.*;
 
 public class UserService {
-    private Update update;
-    private String eMail;
-    private String groupNumber;
+    private final Update update;
     private static final SendText sendText = new SendText();
     private static final SendButton sendButton = new SendButton();
     private static final SendMenuButton sendMenuButton = new SendMenuButton();
@@ -50,8 +47,8 @@ public class UserService {
                 UserList.newUser(chatId); }
         }
         // checking Email & GroupNumber
-        eMail = UserList.getEmail(chatId);
-        groupNumber = UserList.getGroupNumber(chatId);
+        String eMail = UserList.getEmail(chatId);
+        String groupNumber = UserList.getGroupNumber(chatId);
         if (eMail.isBlank()){
             if (EmailValidator.getInstance().isValid(messageText)){
                 UserList.addEmail(chatId, messageText);

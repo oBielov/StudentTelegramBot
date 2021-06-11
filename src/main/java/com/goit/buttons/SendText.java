@@ -1,4 +1,4 @@
-package com.goit.messages;
+package com.goit.buttons;
 
 import com.goit.api.TelegramApiController;
 import lombok.SneakyThrows;
