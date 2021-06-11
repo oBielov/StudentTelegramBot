@@ -29,12 +29,12 @@ public class UserInactivityTimer {
                 listButtons.add("Нет");
                 sendButton.sendButton(chatId,"Продолжаем?", listButtons);
             }
-        }, 1200000, 1200000);//нужно поменять на время в задании 20 мин.
+        }, 3*1000, 20*60*1000);//нужно поменять на время в задании 20 мин.
     }
     //реакция на кнопку таймера неактивности "НЕТ"
     public static void stopUserCheckInactivity(Long chatId) {
         timerMap.get(chatId).cancel();
-        sendText.sendText(chatId, "Жаль!\nКогда будешь готов жми кнопку /<b>ДАЛЕЕ</b> вверху!");
+        sendText.sendText(chatId, "Жаль!\nКогда будешь готов жми кнопку <b>ДАЛЕЕ</b> вверху!");
     }
 
     //реакция на кнопку таймера неактивности "ДА"
