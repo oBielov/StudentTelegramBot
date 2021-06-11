@@ -1,6 +1,9 @@
 package com.goit.user;
 
 import com.goit.api.TelegramApiController;
+import com.goit.buttons.SendButton;
+import com.goit.buttons.SendMenuButton;
+import com.goit.buttons.SendText;
 import lombok.SneakyThrows;
 
 import java.nio.file.Files;
@@ -24,12 +27,15 @@ public class UserNotificationTimer {
     private static final long DAY = 1000 * 60 * 60 * 24; //day format in milliseconds (24h)
     private static final String FILEPATH = "src/main/notification_phrases.txt"; //file with phrases to send
     private static final Timer timer = new Timer(); //main timer
+    private static final SendText sendText = new SendText();
+    private static final SendButton sendButton = new SendButton();
+    private static final SendMenuButton sendMenuButton = new SendMenuButton();
 
     /**
      * TimerTask returns a phrase at a given time once in 24 hours.
      */
     public static void sendMenuButton(Long chatId) {
-        telegramApiController.sendMenuButton(chatId, "Выберите в нижнем меню время напоминания", buttons);
+        sendMenuButton.sendMenuButton(chatId, "Выберите в нижнем меню время напоминания", buttons);
     }
 
     public static void checkMenuButtonClick(Long chatId, String messageText) {
@@ -40,7 +46,7 @@ public class UserNotificationTimer {
                 for (String timeOnMenuButton : button) {
                     if (timeOnMenuButton.equals(messageText)) {
                         run(Integer.parseInt(timeOnMenuButton.substring(0, 2)), 0);
-                        telegramApiController.sendText(chatId, "Напоминание установленно на: " + timeOnMenuButton);
+                        sendText.sendText(chatId, "Напоминание установленно на: " + timeOnMenuButton);
                     }
                 }
             }
@@ -62,7 +68,7 @@ public class UserNotificationTimer {
      */
     public static void notificationOff(Long chatId) {
         timer.cancel();
-        telegramApiController.sendText(chatId, "Вы отключили напоминание!\nЧтобы возобновить выберите время в меню.");
+        sendText.sendText(chatId, "Вы отключили напоминание!\nЧтобы возобновить выберите время в меню.");
     }
 
     /**
