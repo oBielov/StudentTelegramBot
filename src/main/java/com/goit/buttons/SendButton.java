@@ -1,5 +1,6 @@
-package com.goit.telegrambot;
+package com.goit.buttons;
 
+import com.goit.api.TelegramApiController;
 import lombok.SneakyThrows;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class SendButton {
-
+    private static final TelegramApiController telegramApiController = new TelegramApiController();
     /**
      * create buttons inline  for the telegram user
      * @param chatId Long, ID current chat in telegram
@@ -22,9 +23,10 @@ public class SendButton {
     public void sendButton(Long chatId, String text, List<String> buttons){
         SendMessage sendMessageRequest = new SendMessage();
         sendMessageRequest.setChatId(chatId.toString());
+        sendMessageRequest.enableHtml(true);
         sendMessageRequest.setText(text);
         sendMessageRequest.setReplyMarkup(createKeyboard(buttons));
-        new TelegramApiController().sendMessage(sendMessageRequest);
+        telegramApiController.sendMessage(sendMessageRequest);
     }
 
     /**

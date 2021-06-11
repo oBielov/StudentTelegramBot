@@ -31,14 +31,27 @@ public class TelegramApiController extends TelegramLongPollingBot {
     }
 
     /**
+     * send a messages to the telegram user
+     * @param sendMessageRequest, SendMessage -  new message
+     */
+    @SneakyThrows
+    public void sendMessage(SendMessage sendMessageRequest) {
+        sendApiMethod(sendMessageRequest);
+    }
+
+    /**
      * send a text to the telegram user
      * @param chatId Long, ID current chat in telegram
      * @param text String, message, which wrote to the telegram user
      */
     @SneakyThrows
     public void sendText(Long chatId, String text){
+<<<<<<<<< Temporary merge branch 1:src/main/java/com/goit/telegrambot/TelegramApiController.java
+        new SendText().sendText(chatId, text);
+=========
         TextMessage textMessage = new TextMessage();
         sendApiMethod(textMessage.message(chatId, text));
+>>>>>>>>> Temporary merge branch 2:src/main/java/com/goit/api/TelegramApiController.java
     }
 
     /**
@@ -49,12 +62,16 @@ public class TelegramApiController extends TelegramLongPollingBot {
      */
     @SneakyThrows
     public void sendButton(Long chatId, String text, List<String> buttons){
+<<<<<<<<< Temporary merge branch 1:src/main/java/com/goit/telegrambot/TelegramApiController.java
+        new SendButton().sendButton(chatId, text, buttons);
+=========
         SendMessage sendMessageRequest = new SendMessage();
         sendMessageRequest.enableMarkdown(true);
         sendMessageRequest.setChatId(chatId.toString());
         sendMessageRequest.setText(text);
         sendMessageRequest.setReplyMarkup(createKeyboard(buttons));
         sendApiMethod(sendMessageRequest);
+>>>>>>>>> Temporary merge branch 2:src/main/java/com/goit/api/TelegramApiController.java
     }
 
     /**
@@ -65,6 +82,9 @@ public class TelegramApiController extends TelegramLongPollingBot {
      */
     @SneakyThrows
     public void sendMenuButton(Long chatId, String text, String[][] buttons){
+<<<<<<<<< Temporary merge branch 1:src/main/java/com/goit/telegrambot/TelegramApiController.java
+        new SendMenuButton().sendMenuButton(chatId, text, buttons);
+=========
         SendMessage sendMessageRequest = new SendMessage();
         sendMessageRequest.setChatId(chatId.toString());
         sendMessageRequest.setText(text);
@@ -106,6 +126,7 @@ public class TelegramApiController extends TelegramLongPollingBot {
         }
         replyKeyboardMarkup.setKeyboard(keyboard);
         return replyKeyboardMarkup;
+>>>>>>>>> Temporary merge branch 2:src/main/java/com/goit/api/TelegramApiController.java
     }
 
 

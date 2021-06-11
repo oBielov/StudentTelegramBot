@@ -1,30 +1,25 @@
 package com.goit.telegrambot;
 
-import com.goit.api.GoogleApiController;
 import com.goit.buttons.Buttons;
+import com.goit.buttons.SendButton;
+import com.goit.buttons.SendText;
+import com.goit.messages.Continue;
 import com.goit.messages.Messages;
-import com.goit.user.LearningBlock;
-import com.goit.user.User;
-import com.goit.user.UserList;
-import com.google.api.services.sheets.v4.model.Sheet;
-import com.google.api.services.sheets.v4.model.SheetProperties;
-import com.google.api.services.sheets.v4.model.Spreadsheet;
+import com.goit.user.*;
 import lombok.SneakyThrows;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import com.goit.api.TelegramApiController;
-import com.goit.user.UserInactivityTimer;
 
-import java.util.*;
+import java.util.List;
 
-public class UserService {
-    private Update update;
-    private String eMail;
-    private String groupNumber;
-    private static final TelegramApiController telegramApiController = new TelegramApiController();
+public class Application {
 
 
-    public UserService(Update update) {
+    private final Update update;
+    private static final SendText sendText = new SendText();
+    private static final SendButton sendButton = new SendButton();
+
+    public Application(Update update) {
         this.update = update;
     }
 
@@ -35,37 +30,36 @@ public class UserService {
 
     // Получить и обработать текстовое сообщение юзера
     @SneakyThrows
-    private  void handleMessageUpdate(Update update) {
+    private void handleMessageUpdate(Update update) {
         Long chatId = update.getMessage().getChatId();
         String messageText = update.getMessage().getText();
-        //UserInactivityTimer.updateUserCheckInactivity(chatId);
+        UserInactivityTimer.updateUserCheckInactivity(chatId);
 
         if ("/start".equals(messageText)){
             if (!UserList.isUserExist(chatId)){
                 UserList.newUser(chatId); }
         }
         // checking Email & GroupNumber
-        eMail = UserList.getEmail(chatId);
-        groupNumber = UserList.getGroupNumber(chatId);
+        String eMail = UserList.getEmail(chatId);
+        String groupNumber = UserList.getGroupNumber(chatId);
         if (eMail.isBlank()){
             if (EmailValidator.getInstance().isValid(messageText)){
                 UserList.addEmail(chatId, messageText);
                 eMail = UserList.getEmail(chatId);
             }
-            else { telegramApiController.sendText(chatId, Messages.askEmail()); }
+            else { sendText.sendText(chatId, Messages.askEmail()); }
         }
         if(!eMail.isBlank() && groupNumber.isBlank()) {
             if (groupNumber.isBlank() & !messageText.equals(eMail)) {
                 UserList.addGroupNumber(chatId, messageText);
                 groupNumber = UserList.getGroupNumber(chatId);
             }
-            else telegramApiController.sendText(chatId, Messages.group());
+            else sendText.sendText(chatId, Messages.group());
         }
         if (UserList.isUserExist(chatId) && !eMail.isBlank() && !groupNumber.isBlank()
         && UserList.getCurrentQuestion(chatId)==0) {
-            List<String> titles = getSections();
-            titles.add("Настройки");
-            telegramApiController.sendButton(chatId, Messages.welcome(), titles);
+            List<String> titles = Messages.blocks();
+            sendButton.sendButton(chatId, Messages.welcome(), titles);
         }
     }
 
@@ -73,47 +67,43 @@ public class UserService {
     private void handleCallbackQueryUpdate(Update update){
         Long chatId = update.getCallbackQuery().getFrom().getId();
         String callbackQuery = update.getCallbackQuery().getData();
-        //UserInactivityTimer.updateUserCheckInactivity(chatId);
+        UserInactivityTimer.updateUserCheckInactivity(chatId);
 
-        List<String> titles = getSections();
+        List<String> titles = Messages.blocks();
         if (titles.contains(callbackQuery)) {
-            telegramApiController.sendText(chatId,"выбран раздел обучения '"+callbackQuery+"'");
+            sendText.sendText(chatId,"выбран раздел обучения '"+callbackQuery+"'");
             User user = UserList.getUser(chatId);
             user.setCurrentQuestion(0);
             int currentQuestion = user.getCurrentQuestion();
             LearningBlock currentBlock = user.getLearningBlock();
             currentBlock.setGroupId(callbackQuery);
             currentBlock.fillQuestions();
-            telegramApiController.sendButton(chatId, Continue.sendText(user.getCurrentQuestion(),
+            sendButton.sendButton(chatId, Continue.sendText(user.getCurrentQuestion(),
                     currentBlock), Buttons.nextButton());
             user.setCurrentQuestion(currentQuestion + 1);
         }
         if ("Настройки".equals(callbackQuery)) {
-            String[][] buttons = new String[][] {
-                {"08:00", "09:00", "10:00", "11:00"},
-                {"12:00", "13:00", "14:00", "15:00"},
-                {"16:00", "17:00", "18:00", "19:00"}
-            }; // Выводим под полем ввода меню настройки времени
-            telegramApiController.sendMenuButton(chatId,"Выберите в нижнем меню время напоминания", buttons);
+            UserNotificationTimer.sendMenuButton(chatId);
         }
         if ("Далее".equals(callbackQuery)){
             User user = UserList.getUser(chatId);
             LearningBlock currentBlock = user.getLearningBlock();
             int currentQuestion = user.getCurrentQuestion();
-            telegramApiController.sendButton(chatId, Continue.sendText(user.getCurrentQuestion(),
+            if(currentQuestion == currentBlock.getQuestions().size()){
+                sendButton.sendButton(chatId, Messages.endOfBlock(), titles);
+                user.setCurrentQuestion(0);
+            }
+            sendButton.sendButton(chatId, Continue.sendText(user.getCurrentQuestion(),
                     currentBlock), Buttons.nextButton());
             user.setCurrentQuestion(currentQuestion + 1);
         }
+        if ("Да".equals(callbackQuery)){
+            UserInactivityTimer.continueUserCheckInactivity(chatId);
+        }
+        if ("Нет".equals(callbackQuery)){
+            UserInactivityTimer.stopUserCheckInactivity(chatId);
+        }
     }
 
-    @SneakyThrows
-    private List<String> getSections() {
-        Properties properties = AppProperties.getProperties();
-        String spreadSheetID = properties.getProperty("spreadsheet_id");
-        Spreadsheet spreadsheetMetadata = GoogleApiController.service().spreadsheets().get(spreadSheetID).execute();
-        List<Sheet> sheets = spreadsheetMetadata.getSheets();
-        List<String> titles = new ArrayList<>();
-        sheets.forEach(sheet -> titles.add(((SheetProperties)sheet.get("properties")).get("title").toString()));
-        return titles;
-    }
+
 }
