@@ -62,9 +62,9 @@ public class Application {
             else sendText.sendText(chatId, Messages.group());
         }
         if (UserList.isUserExist(chatId) && !eMail.isBlank() && !groupNumber.isBlank()
-        && UserList.getCurrentQuestion(chatId)==0) {
+        && UserList.getCurrentQuestion(chatId)==0 && !messageText.contains(":00")) {
             if (checkChoiceBlock){
-                sendText.sendText(chatId, "Нужно выбрать блок обучения, по другому никак!");
+                sendText.sendText(chatId, "Чтобы продолжить, нужно выбрать блок обучения!");
                 return;
             }
             List<String> titles = Messages.blocks();
