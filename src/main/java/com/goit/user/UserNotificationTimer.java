@@ -97,7 +97,6 @@ public class UserNotificationTimer {
     private static void printNotificationPhrase(long chatId) {
         Random random = new Random();
         sendText.sendText(chatId, phrases.get(random.nextInt(phrases.size())));
-
     }
 
 

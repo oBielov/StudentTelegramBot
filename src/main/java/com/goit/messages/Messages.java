@@ -56,10 +56,6 @@ public class Messages {
     }
 
     public static String stopCheckInactivity() {
-        return "Жаль!\nКогда будешь готов жми кнопку <b>ДАЛЕЕ</b> вверху!";
-    }
-
-    public static String continueCheckInactivity() {
-        return "Супер!\nТогда продолжаем, жми кнопку <b>ДАЛЕЕ</b> вверху!";
+        return "Окей, я останавливаю тренировку. Можешь продолжить в любое время когда будешь готов.";
     }
 }

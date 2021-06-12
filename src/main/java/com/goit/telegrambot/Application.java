@@ -18,6 +18,7 @@ public class Application {
     private final Update update;
     private static final SendText sendText = new SendText();
     private static final SendButton sendButton = new SendButton();
+    private static Boolean checkChoiceBlock = false;
 
 
     public Application(Update update) {
@@ -59,9 +60,14 @@ public class Application {
         }
         if (UserList.isUserExist(chatId) && !eMail.isBlank() && !groupNumber.isBlank()
         && UserList.getCurrentQuestion(chatId)==0) {
+            if (checkChoiceBlock){
+                sendText.sendText(chatId, "Нужно выбрать блок обучения, по другому никак!");
+                return;
+            }
             List<String> titles = Messages.blocks();
             titles.add("Настройки");
             sendButton.sendButton(chatId, Messages.welcome(), titles);
+            checkChoiceBlock = true;
         }
         UserNotificationTimer.checkMenuButtonClick(chatId, messageText);
     }
