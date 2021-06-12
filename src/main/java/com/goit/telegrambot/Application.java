@@ -63,11 +63,11 @@ public class Application {
         if (UserList.isUserExist(chatId) && !eMail.isBlank() && !groupNumber.isBlank()
         && UserList.getCurrentQuestion(chatId)==0) {
             List<String> titles = Messages.blocks();
-            titles.add("Настройки");
             List<MyButton> buttons = titles
                     .stream()
                     .map(p -> new MyButton(p,p))
                     .collect(Collectors.toList());
+            buttons.add(new MyButton("Настройки","/settings"));
             sendButton.sendButton(chatId, Messages.welcome(), buttons);
         }
         UserNotificationTimer.checkMenuButtonClick(chatId, messageText);
@@ -93,7 +93,7 @@ public class Application {
                     currentBlock), Buttons.nextButton());
             user.setCurrentQuestion(currentQuestion + 1);
         }
-        if ("Настройки".equals(callbackQuery)) {
+        if ("/settings".equals(callbackQuery)) {
             UserNotificationTimer.sendMenuButton(chatId);
         }
         //if ("Далее".equals(callbackQuery)){
@@ -113,10 +113,10 @@ public class Application {
         if (Messages.endOfBlock().equals(callbackQuery)){
             sendButton.sendButton(chatId, Messages.welcome(), buttons);
         }
-        if ("Да".equals(callbackQuery)){
+        if ("/yes".equals(callbackQuery)){
             UserInactivityTimer.continueUserCheckInactivity(chatId);
         }
-        if ("Нет".equals(callbackQuery)){
+        if ("/no".equals(callbackQuery)){
             UserInactivityTimer.stopUserCheckInactivity(chatId);
         }
     }

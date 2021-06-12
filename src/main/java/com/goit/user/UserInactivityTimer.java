@@ -27,8 +27,8 @@ public class UserInactivityTimer {
             @Override
             public void run() {
                 ArrayList<MyButton> listButtons = new ArrayList<>();
-                listButtons.add(new MyButton("Да","Да"));
-                listButtons.add(new MyButton("Нет","Нет"));
+                listButtons.add(new MyButton("Да","/yes"));
+                listButtons.add(new MyButton("Нет","/no"));
                 sendButton.sendButton(chatId,"Продолжаем?", listButtons);
             }
         },20*60*1000, 20*60*1000);//нужно поменять на время в задании 20 мин.

@@ -7,8 +7,8 @@ public class Buttons {
 
     public static List<MyButton> nextButton(){
         List<MyButton> buttons = new ArrayList<>();
-        buttons.add(new MyButton("Далее","Далее"));
-        buttons.add(new MyButton("Настройки","Настройки"));
+        buttons.add(new MyButton("Далее","/next"));
+        buttons.add(new MyButton("Настройки","/settings"));
         return buttons;
     }
 }
