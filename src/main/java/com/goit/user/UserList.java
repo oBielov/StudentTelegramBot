@@ -5,6 +5,8 @@ import java.util.Map;
 
 public class UserList {
     private static Map<Long,User> users = new HashMap<>();
+    
+    public static Map<Long,User> getUsers() { return users;}
 
     public static void newUser(long chatId){
         users.put(chatId, new User(chatId));
