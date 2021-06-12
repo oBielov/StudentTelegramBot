@@ -31,7 +31,6 @@ public class Messages {
         return "<b>Поздравляем! Вы закончили этот блок обучения.\nВы можете начать заново или выбрать другой блок  </b>";
     }
 
-
     @SneakyThrows
     public static List<String> blocks() {
         Properties properties = AppProperties.getProperties();

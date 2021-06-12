@@ -1,6 +1,7 @@
 package com.goit.telegrambot;
 
 import com.goit.buttons.Buttons;
+import com.goit.buttons.MyButton;
 import com.goit.buttons.SendButton;
 import com.goit.buttons.SendText;
 import com.goit.messages.Continue;
@@ -10,7 +11,9 @@ import lombok.SneakyThrows;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Application {
 
@@ -65,8 +68,12 @@ public class Application {
                 return;
             }
             List<String> titles = Messages.blocks();
-            titles.add("Настройки");
-            sendButton.sendButton(chatId, Messages.welcome(), titles);
+            List<MyButton> buttons = titles
+                    .stream()
+                    .map(p -> new MyButton(p,p))
+                    .collect(Collectors.toList());
+            buttons.add(new MyButton("Настройки","/settings"));
+            sendButton.sendButton(chatId, Messages.welcome(), buttons);
             checkChoiceBlock = true;
         }
         UserNotificationTimer.checkMenuButtonClick(chatId, messageText);
@@ -79,6 +86,7 @@ public class Application {
         UserInactivityTimer.updateUserCheckInactivity(chatId);
 
         List<String> titles = Messages.blocks();
+        List<MyButton> buttons = titles.stream().map(p -> new MyButton(p,p)).collect(Collectors.toList());
         if (titles.contains(callbackQuery)) {
             sendText.sendText(chatId,"выбран раздел обучения '"+callbackQuery+"'");
             User user = UserList.getUser(chatId);
@@ -91,15 +99,16 @@ public class Application {
                     currentBlock), Buttons.nextButton());
             user.setCurrentQuestion(currentQuestion + 1);
         }
-        if ("Настройки".equals(callbackQuery)) {
+        if ("/settings".equals(callbackQuery)) {
             UserNotificationTimer.sendMenuButton(chatId);
         }
-        if ("Далее".equals(callbackQuery)){
+        //if ("Далее".equals(callbackQuery)){
+        if (callbackQuery.contains("/next")){
             User user = UserList.getUser(chatId);
             LearningBlock currentBlock = user.getLearningBlock();
             int currentQuestion = user.getCurrentQuestion();
             if(currentQuestion == currentBlock.getQuestions().size()){
-                sendButton.sendButton(chatId, Messages.endOfBlock(), titles);
+                sendButton.sendButton(chatId, Messages.endOfBlock(), buttons);
                 user.setCurrentQuestion(0);
                 return;
             }
@@ -108,12 +117,12 @@ public class Application {
             user.setCurrentQuestion(currentQuestion + 1);
         }
         if (Messages.endOfBlock().equals(callbackQuery)){
-            sendButton.sendButton(chatId, Messages.welcome(), titles);
+            sendButton.sendButton(chatId, Messages.welcome(), buttons);
         }
-        if ("Да".equals(callbackQuery)){
+        if ("/yes".equals(callbackQuery)){
             UserInactivityTimer.continueUserCheckInactivity(chatId);
         }
-        if ("Нет".equals(callbackQuery)){
+        if ("/no".equals(callbackQuery)){
             UserInactivityTimer.stopUserCheckInactivity(chatId);
         }
     }
