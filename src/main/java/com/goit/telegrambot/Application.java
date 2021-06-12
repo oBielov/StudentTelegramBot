@@ -19,6 +19,7 @@ public class Application {
     private static final SendText sendText = new SendText();
     private static final SendButton sendButton = new SendButton();
 
+
     public Application(Update update) {
         this.update = update;
     }
@@ -59,8 +60,10 @@ public class Application {
         if (UserList.isUserExist(chatId) && !eMail.isBlank() && !groupNumber.isBlank()
         && UserList.getCurrentQuestion(chatId)==0) {
             List<String> titles = Messages.blocks();
+            titles.add("Настройки");
             sendButton.sendButton(chatId, Messages.welcome(), titles);
         }
+        UserNotificationTimer.checkMenuButtonClick(chatId, messageText);
     }
 
     // Получить и обработать нажатие юзером КНОПКИ
@@ -92,10 +95,14 @@ public class Application {
             if(currentQuestion == currentBlock.getQuestions().size()){
                 sendButton.sendButton(chatId, Messages.endOfBlock(), titles);
                 user.setCurrentQuestion(0);
+                return;
             }
             sendButton.sendButton(chatId, Continue.sendText(user.getCurrentQuestion(),
                     currentBlock), Buttons.nextButton());
             user.setCurrentQuestion(currentQuestion + 1);
+        }
+        if (Messages.endOfBlock().equals(callbackQuery)){
+            sendButton.sendButton(chatId, Messages.welcome(), titles);
         }
         if ("Да".equals(callbackQuery)){
             UserInactivityTimer.continueUserCheckInactivity(chatId);
