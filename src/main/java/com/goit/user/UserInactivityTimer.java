@@ -1,8 +1,10 @@
 package com.goit.user;
 
 import com.goit.api.TelegramApiController;
+import com.goit.buttons.Buttons;
 import com.goit.buttons.SendButton;
 import com.goit.buttons.SendText;
+import com.goit.messages.Continue;
 import com.goit.messages.Messages;
 
 import java.util.*;
@@ -40,7 +42,9 @@ public class UserInactivityTimer {
 
     //реакция на кнопку таймера неактивности "ДА"
     public static void continueUserCheckInactivity(Long chatId) {
-        sendText.sendText(chatId, Messages.continueCheckInactivity());
-        updateUserCheckInactivity(chatId);
+        User user = UserList.getUser(chatId);
+        LearningBlock currentBlock = user.getLearningBlock();
+        sendButton.sendButton(chatId, Continue.sendText(user.getCurrentQuestion()-1,
+                currentBlock), Buttons.nextButton());
     }
 }
