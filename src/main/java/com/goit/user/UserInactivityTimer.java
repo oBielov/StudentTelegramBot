@@ -1,6 +1,7 @@
 package com.goit.user;
 
 import com.goit.api.TelegramApiController;
+import com.goit.buttons.MyButton;
 import com.goit.buttons.SendButton;
 import com.goit.buttons.SendText;
 import com.goit.messages.Messages;
@@ -25,9 +26,9 @@ public class UserInactivityTimer {
         timerMap.get(chatId).schedule(new TimerTask() {
             @Override
             public void run() {
-                ArrayList<String> listButtons = new ArrayList<>();
-                listButtons.add("Да");
-                listButtons.add("Нет");
+                ArrayList<MyButton> listButtons = new ArrayList<>();
+                listButtons.add(new MyButton("Да","Да"));
+                listButtons.add(new MyButton("Нет","Нет"));
                 sendButton.sendButton(chatId,"Продолжаем?", listButtons);
             }
         },20*60*1000, 20*60*1000);//нужно поменять на время в задании 20 мин.
