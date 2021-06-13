@@ -20,7 +20,7 @@ public class SendButton {
      * @param buttons List of String with button's names
      */
     @SneakyThrows
-    public void sendButton(Long chatId, String text, List<String> buttons){
+    public void sendButton(Long chatId, String text, List<MyButton> buttons){
         SendMessage sendMessageRequest = new SendMessage();
         sendMessageRequest.setChatId(chatId.toString());
         sendMessageRequest.enableHtml(true);
@@ -34,11 +34,15 @@ public class SendButton {
      * @return ReplyKeyboard - collection of buttons
      * @param buttons List of String with button's names
      */
-    private ReplyKeyboard createKeyboard(List <String> buttons){
+    private ReplyKeyboard createKeyboard(List <MyButton> buttons){
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
         List<InlineKeyboardButton> listButtons = buttons
                 .stream()
-                .map(p -> InlineKeyboardButton.builder().text(p).callbackData(p).build())
+                .map(p -> InlineKeyboardButton
+                        .builder()
+                        .text(p.getTextButton())
+                        .callbackData(p.getDataButton())
+                        .build())
                 .collect(Collectors.toList());
         keyboard.setKeyboard(Collections.singletonList(listButtons));
         return keyboard;

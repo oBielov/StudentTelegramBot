@@ -5,11 +5,10 @@ import java.util.List;
 
 public class Buttons {
 
-    public static List<String> nextButton(){
-        List<String> button = new ArrayList<>();
-        button.add("Далее");
-        button.add("Настройки");
-        return button;
+    public static List<MyButton> nextButton(){
+        List<MyButton> buttons = new ArrayList<>();
+        buttons.add(new MyButton("Далее","/next"));
+        return buttons;
     }
 
 }
