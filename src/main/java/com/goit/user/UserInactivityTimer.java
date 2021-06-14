@@ -1,6 +1,5 @@
 package com.goit.user;
 
-import com.goit.api.TelegramApiController;
 import com.goit.buttons.Buttons;
 import com.goit.buttons.MyButton;
 import com.goit.buttons.SendButton;
@@ -12,7 +11,6 @@ import java.util.*;
 
 public class UserInactivityTimer {
     private static final Map<Long, Timer> timerMap = new HashMap<>();
-    private static final TelegramApiController service = new TelegramApiController();
     private static final SendText sendText = new SendText();
     private static final SendButton sendButton = new SendButton();
 

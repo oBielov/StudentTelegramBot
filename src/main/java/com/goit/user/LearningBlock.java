@@ -17,7 +17,7 @@ import java.util.List;
 @Data
 public class LearningBlock {
 
-    private String groupId; //name of group (i.e. JavaScript or HTML)
+    private String course; //name of group (i.e. JavaScript or HTML)
     private List<Question> questions = new ArrayList<>();//list for Question objects
     private static String sheetId = getSheetId();
 
@@ -35,7 +35,7 @@ public class LearningBlock {
     private List<List<Object>> receiveQuestions(){
         String cells = AppProperties.getProperties().getProperty("cells_range");
         ValueRange response = GoogleApiController.service().spreadsheets().values()
-                .get(sheetId, groupId + cells)
+                .get(sheetId, course + cells)
                 .execute();
         return response.getValues();
     }
