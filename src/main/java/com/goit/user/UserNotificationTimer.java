@@ -106,7 +106,7 @@ public class UserNotificationTimer {
     }
 
     public static void setDefaultNotificationTimer (Long chatId) {
-        checkMenuButtonClick(chatId, "08:00");
+        run(chatId, 8, 0);
     }
 
 
