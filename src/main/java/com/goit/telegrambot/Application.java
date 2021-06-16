@@ -1,6 +1,7 @@
 package com.goit.telegrambot;
 
 import com.goit.buttons.Buttons;
+import com.goit.buttons.MyButton;
 import com.goit.buttons.SendButton;
 import com.goit.buttons.SendText;
 import com.goit.messages.Continue;
@@ -11,6 +12,7 @@ import org.apache.commons.validator.routines.EmailValidator;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Application {
 
@@ -19,6 +21,8 @@ public class Application {
     private static final SendText sendText = new SendText();
     private static final SendButton sendButton = new SendButton();
     private static Boolean checkChoiceBlock = false;
+    List<String> titles = Messages.blocks();
+    List<MyButton> buttons = titles.stream().map(p -> new MyButton(p,p)).collect(Collectors.toList());
 
 
     public Application(Update update) {
@@ -37,9 +41,13 @@ public class Application {
         String messageText = update.getMessage().getText();
         UserInactivityTimer.updateUserCheckInactivity(chatId);
 
-        if ("/start".equals(messageText)){
-            if (!UserList.isUserExist(chatId)){
-                UserList.newUser(chatId); }
+        if ("/start".equals(messageText)) {
+            if (!UserList.isUserExist(chatId)) {
+                UserList.newUser(chatId);
+            }
+            else{
+                nextQuestion(chatId);
+            }
         }
         // checking Email & GroupNumber
         String eMail = UserList.getEmail(chatId);
@@ -55,19 +63,14 @@ public class Application {
             if (groupNumber.isBlank() & !messageText.equals(eMail)) {
                 UserList.addGroupNumber(chatId, messageText);
                 groupNumber = UserList.getGroupNumber(chatId);
+                UserNotificationTimer.setDefaultNotificationTimer(chatId);//устанавливаем время по умолчанию 8:00 след дня
             }
             else sendText.sendText(chatId, Messages.group());
         }
         if (UserList.isUserExist(chatId) && !eMail.isBlank() && !groupNumber.isBlank()
-        && UserList.getCurrentQuestion(chatId)==0) {
-            if (checkChoiceBlock){
-                sendText.sendText(chatId, "Нужно выбрать блок обучения, по другому никак!");
-                return;
-            }
-            List<String> titles = Messages.blocks();
-            titles.add("Настройки");
-            sendButton.sendButton(chatId, Messages.welcome(), titles);
-            checkChoiceBlock = true;
+        && UserList.getCurrentQuestion(chatId)==0 && !messageText.contains(":00")) {
+            buttons.add(new MyButton("Настройки","/settings"));
+            sendButton.sendButton(chatId, Messages.welcome(), buttons);
         }
         UserNotificationTimer.checkMenuButtonClick(chatId, messageText);
     }
@@ -78,45 +81,49 @@ public class Application {
         String callbackQuery = update.getCallbackQuery().getData();
         UserInactivityTimer.updateUserCheckInactivity(chatId);
 
-        List<String> titles = Messages.blocks();
         if (titles.contains(callbackQuery)) {
-            sendText.sendText(chatId,"выбран раздел обучения '"+callbackQuery+"'");
-            User user = UserList.getUser(chatId);
-            user.setCurrentQuestion(0);
-            int currentQuestion = user.getCurrentQuestion();
-            LearningBlock currentBlock = user.getLearningBlock();
-            currentBlock.setGroupId(callbackQuery);
-            currentBlock.fillQuestions();
-            sendButton.sendButton(chatId, Continue.sendText(user.getCurrentQuestion(),
-                    currentBlock), Buttons.nextButton());
-            user.setCurrentQuestion(currentQuestion + 1);
+            setCourse(chatId, callbackQuery);
         }
-        if ("Настройки".equals(callbackQuery)) {
+        if ("/settings".equals(callbackQuery)) {
             UserNotificationTimer.sendMenuButton(chatId);
         }
-        if ("Далее".equals(callbackQuery)){
-            User user = UserList.getUser(chatId);
-            LearningBlock currentBlock = user.getLearningBlock();
-            int currentQuestion = user.getCurrentQuestion();
-            if(currentQuestion == currentBlock.getQuestions().size()){
-                sendButton.sendButton(chatId, Messages.endOfBlock(), titles);
-                user.setCurrentQuestion(0);
-                return;
-            }
-            sendButton.sendButton(chatId, Continue.sendText(user.getCurrentQuestion(),
-                    currentBlock), Buttons.nextButton());
-            user.setCurrentQuestion(currentQuestion + 1);
+
+        if (callbackQuery.contains("/next")){
+            nextQuestion(chatId);
         }
         if (Messages.endOfBlock().equals(callbackQuery)){
-            sendButton.sendButton(chatId, Messages.welcome(), titles);
+            sendButton.sendButton(chatId, Messages.welcome(), buttons);
         }
-        if ("Да".equals(callbackQuery)){
+        if ("/yes".equals(callbackQuery)){
             UserInactivityTimer.continueUserCheckInactivity(chatId);
         }
-        if ("Нет".equals(callbackQuery)){
+        if ("/no".equals(callbackQuery)){
             UserInactivityTimer.stopUserCheckInactivity(chatId);
         }
     }
 
+    private void nextQuestion(long chatId){
+        User user = UserList.getUser(chatId);
+        LearningBlock currentBlock = user.getLearningBlock();
+        int currentQuestion = user.getCurrentQuestion();
+        if(currentQuestion == currentBlock.getQuestions().size()){
+            sendButton.sendButton(chatId, Messages.endOfBlock(), buttons);
+            return;
+        }
+        sendButton.sendButton(chatId, Continue.sendText(user.getCurrentQuestion(),
+                currentBlock), Buttons.nextButton());
+        user.setCurrentQuestion(currentQuestion + 1);
+    }
+
+    private void setCourse(long chatId, String callbackQuery){
+        sendText.sendText(chatId,"выбран раздел обучения '"+callbackQuery+"'");
+        User user = UserList.getUser(chatId);
+        user.setCurrentQuestion(0);
+        user.setLearningBlock(new LearningBlock());
+        LearningBlock currentBlock = user.getLearningBlock();
+        currentBlock.setCourse(callbackQuery);
+        currentBlock.fillQuestions();
+        nextQuestion(chatId);
+    }
 
 }
