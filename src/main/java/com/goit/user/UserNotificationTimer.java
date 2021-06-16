@@ -26,10 +26,10 @@ public class UserNotificationTimer {
 
     private static final long DAY = 1000 * 60 * 60 * 24; //day format in milliseconds (24h)
     private static final String FILEPATH = "/notification_phrases.txt"; //file with phrases to send
-    private static final Timer timer = new Timer(); //main timer
     private static final SendText sendText = new SendText();
     private static final SendMenuButton sendMenuButton = new SendMenuButton();
     private static List<String> phrases;
+    private static Map<Long,Timer> notificationMap = new HashMap<>();
 
     static {
         try {
@@ -62,25 +62,31 @@ public class UserNotificationTimer {
     }
 
     public static void run(Long chatId, int hours, int minutes) {
+        if (notificationMap.containsKey(chatId)){
+            notificationMap.get(chatId).cancel();
+        }
+        notificationMap.put(chatId, new Timer());
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
                 printNotificationPhrase(chatId);
             }
         };
-        timer.schedule(task, notificationTime(hours, minutes), DAY);
+        notificationMap.get(chatId).schedule(task, notificationTime(hours, minutes), DAY);
     }
 
     /**
-     * Method to turn notifications off. Stops {@link #timer}
+     * Method to turn notifications off. Stops {@link #notificationMap}
      */
     public static void notificationOff(Long chatId) {
-        timer.cancel();
-        sendText.sendText(chatId, Messages.notificationOff());
+        if (notificationMap.containsKey(chatId)) {
+            notificationMap.get(chatId).cancel();
+            sendText.sendText(chatId, Messages.notificationOff());
+        }
     }
 
     /**
-     * Service method to return Date object for {@link #timer} arguments
+     * Service method to return Date object for {@link #notificationMap} arguments
      *
      * @return Date object
      * @see Date
@@ -97,6 +103,10 @@ public class UserNotificationTimer {
     private static void printNotificationPhrase(long chatId) {
         Random random = new Random();
         sendText.sendText(chatId, phrases.get(random.nextInt(phrases.size())));
+    }
+
+    public static void setDefaultNotificationTimer (Long chatId) {
+        checkMenuButtonClick(chatId, "08:00");
     }
 
 
