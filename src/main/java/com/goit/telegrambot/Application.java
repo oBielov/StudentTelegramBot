@@ -63,6 +63,7 @@ public class Application {
             if (groupNumber.isBlank() & !messageText.equals(eMail)) {
                 UserList.addGroupNumber(chatId, messageText);
                 groupNumber = UserList.getGroupNumber(chatId);
+                UserNotificationTimer.setDefaultNotificationTimer(chatId);//устанавливаем время по умолчанию 8:00 след дня
             }
             else sendText.sendText(chatId, Messages.group());
         }
@@ -124,6 +125,5 @@ public class Application {
         currentBlock.fillQuestions();
         nextQuestion(chatId);
     }
-
 
 }
