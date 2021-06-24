@@ -1,7 +1,7 @@
 package com.goit.messages;
 
-import com.goit.api.GoogleApiController;
-import com.goit.telegrambot.AppProperties;
+import com.goit.controllers.GoogleApiController;
+import com.goit.services.AppProperties;
 import com.google.api.services.sheets.v4.model.Sheet;
 import com.google.api.services.sheets.v4.model.SheetProperties;
 import com.google.api.services.sheets.v4.model.Spreadsheet;

@@ -1,7 +1,7 @@
-package com.goit.user;
+package com.goit.repository;
 
-import com.goit.api.GoogleApiController;
-import com.goit.telegrambot.AppProperties;
+import com.goit.controllers.GoogleApiController;
+import com.goit.services.AppProperties;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import lombok.Data;
 import lombok.SneakyThrows;
@@ -64,5 +64,9 @@ public class LearningBlock {
      */
     public Question getQuestion(int questionNum){
         return questions.get(questionNum);
+    }
+
+    public static LearningBlock of(){
+        return new LearningBlock();
     }
 }

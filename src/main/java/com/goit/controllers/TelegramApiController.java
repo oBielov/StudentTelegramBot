@@ -1,13 +1,14 @@
-package com.goit.api;
+package com.goit.controllers;
 
-import com.goit.telegrambot.Application;
+import com.goit.services.Application;
 import lombok.SneakyThrows;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import com.goit.telegrambot.AppProperties;
+import com.goit.services.AppProperties;
 
 public class TelegramApiController extends TelegramLongPollingBot {
+    private Application application = new Application();
 
     @SneakyThrows
     @Override
@@ -19,7 +20,8 @@ public class TelegramApiController extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        new Application(update).analiseMessage();
+        //new Application(update).analiseMessage();
+        application.analiseMessage(update);
     }
 
     /**

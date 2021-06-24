@@ -1,4 +1,4 @@
-package com.goit.user;
+package com.goit.repository;
 
 import java.util.HashMap;
 import java.util.Map;

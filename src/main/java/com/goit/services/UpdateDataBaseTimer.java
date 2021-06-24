@@ -1,6 +1,6 @@
-package com.goit.telegrambot;
+package com.goit.services;
 
-import com.goit.user.UserList;
+import com.goit.repository.UserList;
 import lombok.SneakyThrows;
 
 import java.util.Calendar;

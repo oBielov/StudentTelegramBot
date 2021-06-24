@@ -1,6 +1,6 @@
 package com.goit.messages;
-import com.goit.user.LearningBlock;
-import com.goit.user.Question;
+import com.goit.repository.LearningBlock;
+import com.goit.repository.Question;
 
 
 public class Continue {

@@ -1,6 +1,6 @@
 package com.goit.buttons;
 
-import com.goit.api.TelegramApiController;
+import com.goit.controllers.TelegramApiController;
 import lombok.SneakyThrows;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 

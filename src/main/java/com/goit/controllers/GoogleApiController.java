@@ -1,4 +1,4 @@
-package com.goit.api;
+package com.goit.controllers;
 
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpRequestInitializer;

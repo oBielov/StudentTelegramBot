@@ -1,11 +1,10 @@
-package com.goit.telegrambot;
+package com.goit.services;
 
-import com.goit.api.TelegramApiController;
+import com.goit.controllers.TelegramApiController;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Properties;
 
 public class AppProperties {
     private static java.util.Properties appProperties;

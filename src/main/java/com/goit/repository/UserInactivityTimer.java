@@ -1,4 +1,4 @@
-package com.goit.user;
+package com.goit.repository;
 
 import com.goit.buttons.Buttons;
 import com.goit.buttons.MyButton;
@@ -46,4 +46,6 @@ public class UserInactivityTimer {
         sendButton.sendButton(chatId, Continue.sendText(user.getCurrentQuestion()-1,
                 currentBlock), Buttons.nextButton());
     }
+
+
 }

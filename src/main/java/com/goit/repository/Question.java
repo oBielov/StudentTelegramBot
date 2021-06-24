@@ -1,4 +1,4 @@
-package com.goit.user;
+package com.goit.repository;
 
 
 import lombok.Data;

@@ -1,4 +1,4 @@
-package com.goit.user;
+package com.goit.repository;
 
 import com.goit.buttons.SendMenuButton;
 import com.goit.buttons.SendText;
@@ -109,5 +109,7 @@ public class UserNotificationTimer {
         run(chatId, 8, 0);
     }
 
-
+    public static UserNotificationTimer of() {
+        return new UserNotificationTimer();
+    }
 }

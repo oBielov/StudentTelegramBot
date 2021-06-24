@@ -1,7 +1,7 @@
-package com.goit.telegrambot;
+package com.goit.services;
 
 
-import com.goit.api.TelegramApiController;
+import com.goit.controllers.TelegramApiController;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;

@@ -1,4 +1,4 @@
-package com.goit.telegrambot;
+package com.goit.services;
 
 import com.goit.buttons.Buttons;
 import com.goit.buttons.MyButton;
@@ -6,7 +6,7 @@ import com.goit.buttons.SendButton;
 import com.goit.buttons.SendText;
 import com.goit.messages.Continue;
 import com.goit.messages.Messages;
-import com.goit.user.*;
+import com.goit.repository.*;
 import lombok.SneakyThrows;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -14,13 +14,12 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Application {
-
+public class Application implements IApplication{
 
     private final Update update;
-    private static final SendText sendText = new SendText();
-    private static final SendButton sendButton = new SendButton();
-    private static Boolean checkChoiceBlock = false;
+    private final SendText sendText = new SendText();
+    private final SendButton sendButton = new SendButton();
+    private Boolean checkChoiceBlock = false;
     List<String> titles = Messages.blocks();
     List<MyButton> buttons = titles.stream().map(p -> new MyButton(p,p)).collect(Collectors.toList());
 
@@ -28,8 +27,11 @@ public class Application {
     public Application(Update update) {
         this.update = update;
     }
+    public Application() {
 
-    public void analiseMessage() {
+    }
+
+    public void analiseMessage(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) { handleMessageUpdate(update); }
         if (update.hasCallbackQuery()) { handleCallbackQueryUpdate(update); }
     }
