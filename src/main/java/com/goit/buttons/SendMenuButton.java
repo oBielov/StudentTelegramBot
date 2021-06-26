@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class SendMenuButton {
-    private static final TelegramApiController telegramApiController = new TelegramApiController();
+    private static final TelegramApiController telegramApiController =  new TelegramApiController();
      /**
      * create menu with buttons (under the text-box) for the telegram user
      * @param chatId Long, ID current chat in telegram

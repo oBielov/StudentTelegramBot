@@ -1,15 +1,20 @@
 package com.goit.handler;
 
-import com.goit.messages.Message;
+import com.goit.controllers.MessageSender;
+import com.goit.services.UserNotificationTimer;
 
 public class HandlerNotify extends TelegramCommandHandler{
-    @Override
-    protected void aplay(Long chatID, String callbackQuery, Message message) {
+    public HandlerNotify(TelegramCommandHandler handler) {
+        super(handler);
+    }
 
+    @Override
+    protected void aplay(Long chatId, String callbackQuery, MessageSender message) {
+        userNotificationTimer.checkMenuButtonClick(chatId, callbackQuery);
     }
 
     @Override
     protected boolean isApplicable(String callbackQuery) {
-        return false;
+        return "/notify".equals(callbackQuery);
     }
 }

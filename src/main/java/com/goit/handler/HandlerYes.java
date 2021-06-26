@@ -1,15 +1,20 @@
 package com.goit.handler;
 
-import com.goit.messages.Message;
+import com.goit.controllers.MessageSender;
+import com.goit.repository.UserInactivityTimer;
 
 public class HandlerYes extends TelegramCommandHandler{
-    @Override
-    protected void aplay(Long chatID, String callbackQuery, Message message) {
+    public HandlerYes(TelegramCommandHandler handler) {
+        super(handler);
+    }
 
+    @Override
+    protected void aplay(Long chatId, String callbackQuery, MessageSender message) {
+        UserInactivityTimer.continueUserCheckInactivity(chatId);
     }
 
     @Override
     protected boolean isApplicable(String callbackQuery) {
-        return false;
+        return "/yes".equals(callbackQuery);
     }
 }

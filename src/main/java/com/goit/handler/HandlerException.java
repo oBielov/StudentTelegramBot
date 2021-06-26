@@ -1,15 +1,20 @@
 package com.goit.handler;
 
-import com.goit.messages.Message;
+import com.goit.controllers.MessageSender;
 
 public class HandlerException extends TelegramCommandHandler{
-    @Override
-    protected void aplay(Long chatID, String callbackQuery, Message message) {
 
+    public HandlerException() {
+        super(null);
+    }
+
+    @Override
+    protected void aplay(Long chatId, String callbackQuery, MessageSender message) {
+        throw new RuntimeException("Command '" + callbackQuery + "' not found");
     }
 
     @Override
     protected boolean isApplicable(String callbackQuery) {
-        return false;
+        return true;
     }
 }

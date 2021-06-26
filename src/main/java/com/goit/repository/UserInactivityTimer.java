@@ -2,10 +2,12 @@ package com.goit.repository;
 
 import com.goit.buttons.Buttons;
 import com.goit.buttons.MyButton;
-import com.goit.buttons.SendButton;
+import com.goit.controllers.SendButton;
 import com.goit.buttons.SendText;
 import com.goit.messages.Continue;
 import com.goit.messages.Messages;
+import com.goit.models.LearningBlock;
+import com.goit.models.User;
 
 import java.util.*;
 
@@ -29,7 +31,7 @@ public class UserInactivityTimer {
                 ArrayList<MyButton> listButtons = new ArrayList<>();
                 listButtons.add(new MyButton("Да","/yes"));
                 listButtons.add(new MyButton("Нет","/no"));
-                sendButton.sendButton(chatId,"Продолжаем?", listButtons);
+                sendButton.sendNewMessage(chatId,"Продолжаем?", listButtons);
             }
         },20*60*1000, 20*60*1000);//нужно поменять на время в задании 20 мин.
     }
@@ -43,7 +45,7 @@ public class UserInactivityTimer {
     public static void continueUserCheckInactivity(Long chatId) {
         User user = UserList.getUser(chatId);
         LearningBlock currentBlock = user.getLearningBlock();
-        sendButton.sendButton(chatId, Continue.sendText(user.getCurrentQuestion()-1,
+        sendButton.sendNewMessage(chatId, Continue.sendText(user.getCurrentQuestion()-1,
                 currentBlock), Buttons.nextButton());
     }
 

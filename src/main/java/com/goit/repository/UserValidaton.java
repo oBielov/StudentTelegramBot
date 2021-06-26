@@ -1,6 +1,7 @@
 package com.goit.repository;
 
 import com.goit.controllers.TelegramApiController;
+import com.goit.models.User;
 import org.apache.commons.validator.routines.EmailValidator;
 
 public class UserValidaton {

@@ -1,15 +1,15 @@
-package com.goit.repository;
+package com.goit.models;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 @Data
 @RequiredArgsConstructor
-public class User {
+public class User implements BaseEntity<Long>{
 
     //id диалога
     //@NonNull
-    private Long chatId;
+    private Long id; //chatId
     private String nickname;
     private String email;
     private String groupName;
@@ -18,15 +18,14 @@ public class User {
     private LearningBlock learningBlock;
 
     public User(long chatId){
-        this.chatId = chatId;
-        this.email = "";
-        this.groupName = "";
-        this.currentQuestion = 0;
+        new User( chatId, "", "");
     }
 
     public User(long chatId, String email, String groupName) {
-        this.chatId = chatId;
+        this.id = chatId;
         this.email = email;
         this.groupName = groupName;
+        this.currentQuestion = 0;
     }
+
 }
